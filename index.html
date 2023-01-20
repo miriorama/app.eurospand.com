@@ -1,0 +1,73 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eurospand</title>
+
+    <link href="/css/style.css?v=1" rel="stylesheet" />
+</head>
+<body>
+
+    <div class="header">
+        <div class="logo"></div>
+        <div class="menu"></div>
+    </div>
+
+    <div class="main">
+
+    </div>
+
+    <template data-section="index">
+        <button class="select-machine"></button>
+        <button class="select-machine"></button>
+    </template>
+    <template data-section="select-machine">
+        <div class="machine-list"></div>
+    </template>
+
+    <template data-section="select-concime">
+        <div class="concime-type-list"></div>
+        <div class="concime-list"></div>
+    </template>
+
+    <template data-section="set-working-parameters">
+        <div class="parameter parameter-width">
+            <div class="parameter-title">Width</div>
+            <div class="parameter-slider">
+                <input id="widthText" type="text">
+            </div>
+            <div class="parameter-slider">
+                <input id="widthRange" type="range">
+            </div>
+            <div class="parameter-max"></div>
+            <div class="parameter-min"></div>
+        </div>
+        <div class="parameter parameter-speed">
+            <div class="parameter-title">Speed</div>
+            <div class="parameter-slider">
+                <input id="widthText" type="text">
+            </div>
+            <div class="parameter-slider">
+                <input id="widthRange" type="range">
+            </div>
+            <div class="parameter-max"></div>
+            <div class="parameter-min"></div>
+        </div>
+        <div class="parameter parameter-quantity">
+            <div class="parameter-title">Quantity</div>
+            <div class="parameter-slider">
+                <input id="widthText" type="text">
+            </div>
+            <div class="parameter-slider">
+                <input id="widthRange" type="range">
+            </div>
+            <div class="parameter-max"></div>
+            <div class="parameter-min"></div>
+        </div>
+    </template>
+
+    <script type="text/javascript" src="js/app.js?v=1"></script>
+    <script type="text/javascript" src="js/data.js?v=1"></script>
+</body>
+</html>

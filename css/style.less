@@ -1,0 +1,73 @@
+@red: #E20513;
+@gray: #424242;
+@light-gray: #E0E0E0;
+@white: #fff;
+
+@cubicBezier: cubic-bezier(0.39, 0.57, 0, 1);
+@transition: .3s @cubicBezier;
+
+/* RESET */
+*,*:before,*:after {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+	line-height: 1.2em;
+}
+
+::selection { background: @red; }
+
+html {
+    -webkit-text-size-adjust: 100%;
+    -webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	scroll-behavior: smooth;
+	-webkit-tap-highlight-color: transparent;
+}
+
+h1,h2,h3,h4,p,ul,ol {
+	display: block;
+	font-size: inherit;
+}
+
+img {
+	max-width: 100%;
+	height: auto;
+	border: 0;
+}
+
+a {
+    color: inherit;
+    transition: .2s;
+    outline:0;
+	cursor:pointer;
+}
+
+body{
+	font-family: 'Minion Pro', sans-serif;
+	font-size: 16px;
+	line-height: 24px;
+	color: @gray;
+	font-weight:400;
+	background: @white;
+}
+
+/* ATOMS */
+b,strong{font-weight:700}
+p:not(:last-child){margin-bottom:30px}
+
+
+body {
+
+}
+
+
+.concime-type {
+	img {
+		width: 100px;
+	}
+}
+.concime {
+	img {
+		width: 200px;
+	}
+}
