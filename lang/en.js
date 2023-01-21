@@ -11,6 +11,12 @@
 
 let LANG_DATA = {
 
+    "menu-saved" : "saved",
+    "menu-lang" : "lang",
+    "menu-unit" : "unit",
+    "menu-who" : "who",
+    "menu-contact" : "contact",
+
     "concime-shape-spherical": "Spherical",
     "concime-shape-mineral": "Mineral",
     "concime-shape-granular": "Granular",
@@ -22,6 +28,12 @@ let LANG_DATA = {
     "concime-country-france": "France",
     "concime-country-austria": "Austria",
     "concime-country-germany": "Germany",
+
+    "working-optional-kit": "With optional vanes kit",
+
+    "step-machine" : "machine",
+    "step-concime" : "concime",
+    "step-params" : "params",
 
     "welcome-to" : "Willkommen zu",
     "device-synchronisation-in-progress" : "Gerätesynchronisierung wird ausgeführt",

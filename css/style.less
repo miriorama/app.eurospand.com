@@ -59,7 +59,33 @@ p:not(:last-child){margin-bottom:30px}
 body {
 
 }
+.menu-button {
+	position: fixed;
+	top: 24px;
+	right: 24px;
+}
+.menu {
+	visibility: hidden;
+	opacity: 0;
+	transition: @transition;
 
+	&.is-visible {
+		visibility: visible;
+		opacity: 1;
+	}
+}
+
+.step-list {
+	display: flex;
+
+	.step {
+		margin: 0 8px;
+
+		&.selected {
+			color: red;
+		}
+	}
+}
 
 .concime-type {
 	img {

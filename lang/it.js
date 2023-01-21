@@ -16,6 +16,12 @@ bouchons - pelleted - pelletiert - peletizado
 
 let LANG_DATA = {
 
+    "menu-saved" : "saved",
+    "menu-lang" : "lang",
+    "menu-unit" : "unit",
+    "menu-who" : "who",
+    "menu-contact" : "contact",
+
     "concime-shape-spherical": "sferica",
     "concime-shape-mineral": "minerale",
     "concime-shape-granular": "granulare",
@@ -27,6 +33,12 @@ let LANG_DATA = {
     "concime-country-france": "Francia",
     "concime-country-austria": "Austria",
     "concime-country-germany": "Germania",
+
+    "working-optional-kit": "Con kit palette aggiuntive",
+
+    "step-machine" : "machine",
+    "step-concime" : "concime",
+    "step-params" : "params",
 
     "welcome-to" : "Willkommen zu",
     "device-synchronisation-in-progress" : "Gerätesynchronisierung wird ausgeführt",
@@ -78,4 +90,57 @@ let LANG_DATA = {
     "credits" : "Kredite",
     "saved-works" : "Gespeicherte Werke",
     "no-combination-found" : "Keine Kombination gefunden!"
+}
+
+let LANG_MACHINE_DATA = {
+    "david-compact": {
+        name: "",
+        subtitle: "Spandiconcime professionale centrifugo doppio disco",
+        desc: ""
+    },
+    "david-compact-fruit": {
+        name: "",
+        subtitle: "",
+        desc: ""
+    },
+    "apollo-galileo": {
+        name: "",
+        subtitle: "",
+        desc: ""
+    },
+    "jolly-zeus-18": {
+        name: "",
+        subtitle: "",
+        desc: ""
+    },
+    "jolly-zeus-18-fruit": {
+        name: "",
+        subtitle: "",
+        desc: ""
+    },
+    "jolly-zeus-24": {
+        name: "",
+        subtitle: "",
+        desc: ""
+    },
+    "jolly-zeus-28": {
+        name: "",
+        subtitle: "",
+        desc: ""
+    },
+    "jolly-zeus-32": {
+        name: "",
+        subtitle: "",
+        desc: ""
+    },
+    "elettra-crono-24": {
+        name: "",
+        subtitle: "",
+        desc: ""
+    },
+    "elettra-crono-32": {
+        name: "",
+        subtitle: "",
+        desc: ""
+    },
 }

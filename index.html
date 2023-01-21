@@ -11,7 +11,18 @@
 
     <div class="header">
         <div class="logo"></div>
-        <div class="menu"></div>
+        <div class="menu-button" onclick="APP.menuOpen();">
+            menu
+        </div>
+        <div class="menu">
+            <button class="menu-close" onclick="APP.menuClose();">X</button>
+
+            <button class="menu-saved"></button>
+            <button class="menu-lang"></button>
+            <button class="menu-unit"></button>
+            <button class="menu-who"></button>
+            <button class="menu-contact"></button>
+        </div>
     </div>
 
     <div class="main">
@@ -19,51 +30,81 @@
     </div>
 
     <template data-section="index">
-        <button class="select-machine"></button>
-        <button class="select-machine"></button>
+        <button class="set-machine"></button>
+        <button class="set-machine"></button>
     </template>
-    <template data-section="select-machine">
+    <template data-section="set-machine">
         <div class="machine-list"></div>
     </template>
 
-    <template data-section="select-concime">
+    <template data-section="set-concime">
         <div class="concime-type-list"></div>
         <div class="concime-list"></div>
     </template>
 
-    <template data-section="set-working-parameters">
+    <template data-section="set-params">
+        <div class="optional-width" hidden>
+            <input class="optional-width-checkbox" id="optionalWidth" name="optionalWidth" type="checkbox" onchange="APP.refreshMaxWorkingWidth();">
+            <label class="optional-width-label" for="optionalWidth"></label>
+        </div>
         <div class="parameter parameter-width">
             <div class="parameter-title">Width</div>
-            <div class="parameter-slider">
+            <div class="parameter-text">
                 <input id="widthText" type="text">
             </div>
             <div class="parameter-slider">
-                <input id="widthRange" type="range">
+                <input id="widthRange" type="range" step="1" oninput="APP.refreshCheckLabel(this);">
             </div>
             <div class="parameter-max"></div>
             <div class="parameter-min"></div>
         </div>
         <div class="parameter parameter-speed">
             <div class="parameter-title">Speed</div>
-            <div class="parameter-slider">
+            <div class="parameter-text">
                 <input id="widthText" type="text">
             </div>
             <div class="parameter-slider">
-                <input id="widthRange" type="range">
+                <input id="widthRange" type="range" step="1" oninput="APP.refreshCheckLabel(this);">
             </div>
             <div class="parameter-max"></div>
             <div class="parameter-min"></div>
         </div>
         <div class="parameter parameter-quantity">
             <div class="parameter-title">Quantity</div>
-            <div class="parameter-slider">
+            <div class="parameter-text">
                 <input id="widthText" type="text">
             </div>
             <div class="parameter-slider">
-                <input id="widthRange" type="range">
+                <input id="widthRange" type="range" step="1" oninput="APP.refreshCheckLabel(this);">
             </div>
             <div class="parameter-max"></div>
             <div class="parameter-min"></div>
+        </div>
+        <div class="cta">
+            <button class="params-reset" onclick="APP.paramsReset();">reset</button>
+            <button class="params-compute" onclick="APP.paramsCompute();">compute</button>
+        </div>
+    </template>
+
+    <template data-section="result">
+        <div class="result-list">
+
+        </div>
+        <div class="result-share">
+            <button onclick="APP.shareResult();">share</button>
+            <button onclick="APP.saveResult();">save</button>
+        </div>
+        <div class="result-alert">
+
+        </div>
+    </template>
+
+    <template data-section="show-machine">
+        <div class="machine">
+            <div class="machine-img"></div>
+            <div class="machine-title"></div>
+            <div class="machine-subtitle"></div>
+            <div class="machine-desc"></div>
         </div>
     </template>
 

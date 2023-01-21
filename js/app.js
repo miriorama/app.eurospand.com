@@ -7,6 +7,10 @@ var UTIL = (function () {
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
 
+    util.round = function(num) {
+        return Math.round((num + Number.EPSILON) * 100) / 100;
+    }
+
     return util;
 })();
 
@@ -116,15 +120,18 @@ var APP = (function(){
         concimeTypeList: ['fertilizzanti', 'semi', 'lumachicida']
     }
 
-    let $main;
+    let $main, $menu;
 
     app.init = function() {
-        console.log('init');
         $main = document.querySelector('.main');
+        $menu = document.querySelector('.menu');
 
         if(app.debug) {
-            app.currentMachine = 'david-compact';
-            app.currentConcime = 'urea-granulare-46';
+            app.currentMachine = 'apollo-galileo';
+            app.currentConcime = 'mesurol-pro';
+            app.currentWorkingWidth = 9;
+            app.currentWorkingSpeed = 6;
+            app.currentWorkingQuantity = 1;
         }
 
         app.routes = [
@@ -132,23 +139,29 @@ var APP = (function(){
                 template: 'index',
                 callback: app.initIndex
             },
-            {   regex: '^select-machine/?$',
-                template: 'select-machine',
-                callback: app.initSelectMachine
+            {   regex: '^set-machine/?$',
+                template: 'set-machine',
+                callback: app.initSetMachine
             },
-            {   regex: '^select-concime/?$',
-                template: 'select-concime',
-                callback: app.initSelectConcime
+            {   regex: '^set-concime/?$',
+                template: 'set-concime',
+                callback: app.initSetConcime
             },
-            {   regex: '^set-working-parameters/?$',
-                template: 'set-working-parameters',
+            {   regex: '^set-params/?$',
+                template: 'set-params',
                 callback: app.initSetWorkingParameters
+            },
+            {   regex: '^result/?$',
+                template: 'result',
+                callback: app.initResult
             }
         ];
 
         // gestione hash
         window.addEventListener('hashchange', APP.onHashChange, false);
         APP.onHashChange();
+
+        app.initMenu();
     }
     app.onHashChange = function() {
         app.hash = location.hash.substring(1);
@@ -228,7 +241,28 @@ var APP = (function(){
         return null;
     }
 
-    app.initSelectMachine = function($html) {
+    app.initMenu = function() {
+        let $menuSaved = $menu.querySelector('.menu-saved');
+        let $menuLang = $menu.querySelector('.menu-lang');
+        let $menuUnit = $menu.querySelector('.menu-unit');
+        let $menuWho = $menu.querySelector('.menu-who');
+        let $menuContact = $menu.querySelector('.menu-contact');
+
+        $menuSaved.innerHTML = LANG.get('menu-saved');
+        $menuLang.innerHTML = LANG.get('menu-lang');
+        $menuUnit.innerHTML = LANG.get('menu-unit');
+        $menuWho.innerHTML = LANG.get('menu-who');
+        $menuContact.innerHTML = LANG.get('menu-contact');
+    }
+    app.menuOpen = function() {
+        $menu.classList.add('is-visible');
+    }
+    app.menuClose = function() {
+        $menu.classList.remove('is-visible');
+    }
+
+    // MACHINE
+    app.initSetMachine = function($html) {
         let $machineList = $html.querySelector('.machine-list');
         let machineList = app.getMachine();
 
@@ -239,14 +273,14 @@ var APP = (function(){
             html += `<div class="machine">
                 <div class="machine-img">
                     <img src="/img/machine/${machineId}.jpg" alt="${machine.name}" />
-                    <button onclick="APP.setMachine(${machineId});">${LANG.get('select')}</button>
+                    <button onclick="APP.setMachine('${machineId}');">${LANG.get('select')}</button>
                 </div>
                 ${machine.name}
             </div>`;
         }
         $machineList.innerHTML = html;
 
-        $main.innerHTML = '';
+        $main.innerHTML = app.getStepHtml('machine');
         $main.append($html);
 
         return null;
@@ -265,13 +299,44 @@ var APP = (function(){
 
         app.currentMachine = machineId;
 
-        app.changeContent('select-concime');
+        app.changeContent('set-concime');
+    }
+    app.getStepHtml = function(step) {
+        let html = '';
+        let cssClass = 'selected';
+
+        html = `<div class="step-list">
+            <div class="step ${('machine' === step ? cssClass : '')}" onclick="APP.changeContent('set-machine');">${LANG.get('step-machine')}</div>
+            <div class="step ${('concime' === step ? cssClass : '')}" onclick="APP.changeContent('set-concime');">${LANG.get('step-concime')}</div>
+            <div class="step ${('params' === step ? cssClass : '')}" onclick="APP.changeContent('set-params');">${LANG.get('step-params')}</div>
+        </div>`;
+
+        return html;
+    }
+    app.showMachine = function(machineId) {
+        let machine = app.getMachine(machineId);
+
+        let $machineImg = 'machine-img';
+        let $machineTitle = 'machine-title';
+        let $machineSubtitle = 'machine-subtitle';
+        let $machineDesc = 'machine-desc';
+
+        let html = `<div class="machine">
+            <div class="machine-img">${machineImg}</div>
+            <div class="machine-title">${machineTitle}</div>
+            <div class="machine-subtitle">${machineSubtitle}</div>
+            <div class="machine-desc">${machineDesc}</div>
+        </div>`;
+
+        let $html = document.createElement('div');
+        $html.innerHTML = html;
+
+        document.body.appendChild($html);
+        document.body.classList.add('alert-overflow');
     }
 
-    /*
-        CONCIME
-    */
-    app.initSelectConcime = function($html) {
+    // CONCIME
+    app.initSetConcime = function($html) {
         let $concimeTypeList = $html.querySelector('.concime-type-list');
         let $concimeList = $html.querySelector('.concime-list');
         let concimeList = app.getConcime();
@@ -304,7 +369,7 @@ var APP = (function(){
         }
         $concimeList.innerHTML = html;
 
-        $main.innerHTML = '';
+        $main.innerHTML = app.getStepHtml('concime');
         $main.append($html);
 
         return null;
@@ -337,22 +402,35 @@ var APP = (function(){
 
         app.currentConcime = concimeId;
 
-        app.changeContent('set-working-parameters');
+        app.changeContent('set-params');
     }
 
+    // PARAMS
     app.initSetWorkingParameters = function($html) {
         let currentMachine = app.getMachine(app.currentMachine);
+
+        let $optionalWidth = $html.querySelector('.optional-width');
+        if(currentMachine.widthOpt) {
+            $optionalWidth.removeAttribute('hidden');
+
+            //let $optionalCheck = $html.querySelector('.optional-width-check');
+            let $optionalLabel = $html.querySelector('.optional-width-label');
+            $optionalLabel.innerHTML = LANG.get('working-optional-kit');
+        } else {
+            $optionalWidth.setAttribute('hidden', '');
+        }
+
         let params = {
             'width': {
                 min: currentMachine.widthMin,
-                max: currentMachine.widthMax
+                max: app.getMaxWidth(app.currentMachine, app.currentConcime)
             },
             'speed': {
                 min: 6,
                 max: 20
             },
             'quantity': {
-                min: 1,
+                min: 3,
                 max: 1000
             }
         };
@@ -360,7 +438,7 @@ var APP = (function(){
         for (const paramId of Object.keys(params)) {
             let param = params[paramId];
             let $parameterTitle = $html.querySelector('.parameter-' + paramId + ' .parameter-title');
-            let $parameterSlider = $html.querySelector('.parameter-' + paramId + ' .parameter-slider');
+            let $parameterSlider = $html.querySelector('.parameter-' + paramId + ' .parameter-slider input');
             let $parameterMax = $html.querySelector('.parameter-' + paramId + ' .parameter-max');
             let $parameterMin = $html.querySelector('.parameter-' + paramId + ' .parameter-min');
 
@@ -371,13 +449,125 @@ var APP = (function(){
             $parameterSlider.setAttribute('max', param.max);
         }
 
+        $main.innerHTML = app.getStepHtml('params');
+        $main.append($html);
+
+        return null;
+    }
+    app.refreshCheckLabel = function($el) {
+        let $textInput = $el.closest('.parameter').querySelector('.parameter-text input');
+        console.log($el.value);
+        $textInput.value = $el.value;
+    }
+    app.refreshMaxWorkingWidth = function() {
+        let currentMachine = app.getMachine(app.currentMachine);
+        let $optionalWidthCheckbox = document.querySelector('.optional-width-checkbox');
+        let $parameterMax = document.querySelector('.parameter-width .parameter-max');
+        let $parameterSlider = document.querySelector('.parameter-width .parameter-slider input');
+
+        let maxWidth = app.getMaxWidth(app.currentMachine, app.currentConcime, $optionalWidthCheckbox.checked);
+
+        $parameterMax.innerHTML = maxWidth + 'm';
+        $parameterSlider.setAttribute('max', maxWidth);
+
+        app.refreshCheckLabel($parameterSlider);
+    }
+    app.paramsReset = function() {
+
+    }
+    app.paramsCompute = function() {
+        app.currentWorkingWidth = document.querySelector('.parameter-width .parameter-slider input').value;
+        app.currentWorkingSpeed = document.querySelector('.parameter-speed .parameter-slider input').value;
+        app.currentWorkingQuantity = document.querySelector('.parameter-quantity .parameter-slider input').value;
+
+        app.changeContent('result');
+    }
+    app.getMaxWidth = function(machineId, concimeId, isOptKit = false) {
+        let currentMachine = app.getMachine(machineId);
+        let currentConcime = app.getConcime(concimeId);
+
+        let maxWidth = Math.min(currentMachine.widthMax, currentConcime.spreadingLimit);
+        let exceptionList = (isOptKit ? currentMachine.widthOptException : currentMachine.widthException);
+        if(exceptionList && concimeId in exceptionList) {
+            maxWidth = Math.min(maxWidth, exceptionList[concimeId]);
+        }
+
+        return maxWidth;
+    }
+    app.getOpening = function(machineId, concimeId) {
+        const OPENING = 0;
+        const KGMIN = 1;
+        let currentMachine = app.getMachine(machineId);
+        let currentConcime = app.getConcime(concimeId);
+
+        let kgMin = app.currentWorkingQuantity * app.currentWorkingWidth * app.currentWorkingSpeed / 600;
+        kgMin = UTIL.round(kgMin);
+
+        let opening = null;
+        let curveList = CURVE_DATA[concimeId];
+        let minDiff = Number.MAX_VALUE;
+        let diff = null;
+        for (let i = 0; i < curveList.length; i++) {
+            diff = Math.abs(curveList[i][KGMIN] - kgMin);
+            if(diff < minDiff) {
+                minDiff = diff;
+                opening = curveList[i][OPENING];
+            } else {
+                break;
+            }
+        }
+
+        return {
+            opening: opening,
+            kgMin: kgMin,
+        }
+    }
+
+    // RESULT
+    app.initResult = function($html) {
+        let currentMachine = app.getMachine(app.currentMachine);
+        let currentConcime = app.getConcime(app.currentConcime);
+        let $resultList = $html.querySelector('.result-list');
+
+        function getResultHtml(text, value) {
+            let template = `<div class="result">
+                <div class="result-text">${text}</div>
+                <div class="result-value">${value}</div>
+            </div>`;
+
+            return template;
+        }
+
+        let html = '';
+
+        let opening = app.getOpening(app.currentMachine, app.currentConcime);
+
+        html += getResultHtml('openening', opening.opening);
+        html += getResultHtml('kg/min', opening.kgMin);
+
+        html += getResultHtml('spreader', currentMachine.name);
+        html += getResultHtml('discs height', '');
+        html += getResultHtml('pto speed', '');
+
+        html += getResultHtml('family', currentConcime.type);
+        html += getResultHtml('product', currentConcime.name);
+        html += getResultHtml('form', currentConcime.shape);
+        html += getResultHtml('weight', currentConcime.weight);
+
+        html += getResultHtml('working width', app.currentWorkingWidth);
+        html += getResultHtml('speed', app.currentWorkingSpeed);
+        html += getResultHtml('quantity', app.currentWorkingQuantity);
+        $resultList.innerHTML = html;
+
         $main.innerHTML = '';
         $main.append($html);
 
         return null;
     }
+    app.saveResult = function() {
 
-    app.getLang = function() {
+    }
+    app.getResultList = function() {
 
     }
 
