@@ -127,7 +127,7 @@ var APP = (function(){
         $menu = document.querySelector('.menu');
 
         if(app.debug) {
-            app.currentMachine = 'apollo-galileo';
+            app.currentMachine = 'david-compact';
             app.currentConcime = 'mesurol-pro';
             app.currentWorkingWidth = 9;
             app.currentWorkingSpeed = 6;
@@ -185,11 +185,11 @@ var APP = (function(){
                         document.body.classList.remove('animate');
 
                         if(app.previousTemplate) {
-                        setTimeout(function() {
-                            hide();
-                        }, 300);
+                            setTimeout(function() {
+                                hide();
+                            }, 300);
                         } else {
-                        hide();
+                            hide();
                         }
                     }
 
@@ -202,21 +202,24 @@ var APP = (function(){
                         }
 
                         if($toAppend) {
-                        $main.innerHTML = '';
-                        $main.append($toAppend);
+                            $main.innerHTML = '';
+                            $main.append($toAppend);
                         } else {
 
                         }
+
+                        $main.setAttribute('data-section', route.template);
+
                         if(animate) {
-                        window.setTimeout(function() {
-                            show();
-                        }, 300);
+                            window.setTimeout(function() {
+                                show();
+                            }, 300);
                         } else {
                             show();
                         }
 
                         function show() {
-                        document.body.classList.add('animate');
+                            document.body.classList.add('animate');
                         }
                     }
 
@@ -270,13 +273,15 @@ var APP = (function(){
         for (const machineId of Object.keys(machineList)) {
             let machine = machineList[machineId];
 
-            html += `<div class="machine">
+            html += `<button class="machine" onclick="APP.setMachine('${machineId}');">
                 <div class="machine-img">
                     <img src="/img/machine/${machineId}.jpg" alt="${machine.name}" />
-                    <button onclick="APP.setMachine('${machineId}');">${LANG.get('select')}</button>
                 </div>
-                ${machine.name}
-            </div>`;
+                <div class="machine-title">${machine.name}</div>
+                <div class="machine-cta">
+                    <div class="btn">${LANG.get('select')}</div>
+                </div>
+            </button>`;
         }
         $machineList.innerHTML = html;
 
@@ -298,17 +303,35 @@ var APP = (function(){
         }
 
         app.currentMachine = machineId;
-
+        app.refreshStepList();
         app.changeContent('set-concime');
     }
     app.getStepHtml = function(step) {
         let html = '';
-        let cssClass = 'selected';
+        let cssClass = 'is-selected';
+        let stepParamsDisabled = (app.currentConcime && app.currentMachine ? false : true);
 
         html = `<div class="step-list">
-            <div class="step ${('machine' === step ? cssClass : '')}" onclick="APP.changeContent('set-machine');">${LANG.get('step-machine')}</div>
-            <div class="step ${('concime' === step ? cssClass : '')}" onclick="APP.changeContent('set-concime');">${LANG.get('step-concime')}</div>
-            <div class="step ${('params' === step ? cssClass : '')}" onclick="APP.changeContent('set-params');">${LANG.get('step-params')}</div>
+            <button class="step ${('machine' === step ? cssClass : '')}" data-step="machine" onclick="APP.changeContent('set-machine');">
+                <div class="step-number">1</div>
+                <div class="step-title">${LANG.get('step-machine')}</div>
+                <div class="step-subtitle">Set your spreader</div>
+            </button>
+            <button class="step ${('concime' === step ? cssClass : '')}" data-step="concime" onclick="APP.changeContent('set-concime');">
+                <div class="step-number">2</div>
+                <div class="step-title">${LANG.get('step-concime')}</div>
+                <div class="step-subtitle">Set the product</div>
+            </button>
+            <button class="step ${(stepParamsDisabled ? 'is-disabled' : '')} ${('params' === step ? cssClass : '')}" data-step="params" onclick="APP.changeContent('set-params');">
+                <div class="step-number">3</div>
+                <div class="step-title">${LANG.get('step-params')}</div>
+                <div class="step-subtitle">Set working parameters</div>
+            </button>
+            <button class="step ${(stepParamsDisabled ? 'is-disabled' : '')} ${('result' === step ? cssClass : '')}" data-step="result" onclick="APP.changeContent('result');">
+                <div class="step-number">4</div>
+                <div class="step-title">RESULT</div>
+                <div class="step-subtitle"> </div>
+            </button>
         </div>`;
 
         return html;
@@ -345,13 +368,12 @@ var APP = (function(){
         let html = '';
         for (const concimeType of app.concimeTypeList) {
             let concimeTypeName = UTIL.capitalizeFirstLetter(concimeType);
-            html += `<div class="concime-type">
+            html += `<button class="concime-type" onclick="APP.setConcimeType(this, '${concimeType}');">
                 <div class="concime-type-img">
-                    <img src="/img/concime-type/${concimeType}.png" alt="${concimeTypeName}" />
-                    <button onclick="APP.setConcimeType('${concimeType}');">${LANG.get('select')}</button>
+                    <img src="/img/concime-type/${concimeType}.jpg" alt="${concimeTypeName}" />
                 </div>
                 ${concimeTypeName}
-            </div>`;
+            </button>`;
         }
         $concimeTypeList.innerHTML = html;
 
@@ -359,12 +381,14 @@ var APP = (function(){
         for (const concimeId of Object.keys(concimeList)) {
             let concime = concimeList[concimeId];
 
-            html += `<div class="concime" data-concime-type="${concime.type}" hidden>
+            html += `<div class="concime" data-concime-type="${concime.type}" onclick="APP.setConcime('${concimeId}');">
                 <div class="concime-img">
                     <img src="/img/concime/${concimeId}.png" alt="${concime.name}" />
-                    <button onclick="APP.setConcime('${concimeId}');">${LANG.get('select')}</button>
                 </div>
-                ${concime.name}
+                <div class="concime-title">${concime.name}</div>
+                <div class="concime-cta">
+                    <button class="btn" >${LANG.get('select')}</button>
+                </div>
             </div>`;
         }
         $concimeList.innerHTML = html;
@@ -381,7 +405,13 @@ var APP = (function(){
             return CONCIME_DATA;
         }
     }
-    app.setConcimeType = function(concimeTypeId) {
+    app.setConcimeType = function($el, concimeTypeId) {
+        let $concimeTypeSelected = document.querySelector('.concime-type.is-selected');
+        if($concimeTypeSelected) {
+            $concimeTypeSelected.classList.remove('is-selected');
+        }
+        $el.classList.add('is-selected');
+
         if(!concimeTypeId) {
             return;
         }
@@ -401,23 +431,39 @@ var APP = (function(){
         }
 
         app.currentConcime = concimeId;
-
+        app.refreshStepList();
         app.changeContent('set-params');
+    }
+    app.refreshStepList = function() {
+        if(app.currentConcime && app.currentMachine) {
+            let $paramsStep = document.querySelector('.step[data-step=params]');
+            $paramsStep.classList.remove('is-disabled');
+        }
     }
 
     // PARAMS
     app.initSetWorkingParameters = function($html) {
         let currentMachine = app.getMachine(app.currentMachine);
 
-        let $optionalWidth = $html.querySelector('.optional-width');
-        if(currentMachine.widthOpt) {
-            $optionalWidth.removeAttribute('hidden');
 
-            //let $optionalCheck = $html.querySelector('.optional-width-check');
-            let $optionalLabel = $html.querySelector('.optional-width-label');
-            $optionalLabel.innerHTML = LANG.get('working-optional-kit');
+        let optionalTemplate = `<div class="optional-width" hidden>
+            <input class="optional-width-checkbox switch" id="optionalWidth" name="optionalWidth" type="checkbox" onchange="APP.refreshMaxWorkingWidth();">
+            <label class="optional-width-label" for="optionalWidth"></label>
+        </div>`;
+        let optionalHtml = '';
+        //let $optionalWidth = $html.querySelector('.optional-width');
+        if(currentMachine.widthOpt) {
+            optionalHtml = `<div class="optional-width">
+                <input class="optional-width-checkbox switch" id="optionalWidth" name="optionalWidth" type="checkbox" onchange="APP.refreshMaxWorkingWidth();">
+                <label class="optional-width-label" for="optionalWidth">${LANG.get('working-optional-kit')}</label>
+            </div>`;
+            //$optionalWidth.removeAttribute('hidden');
+
+            ////let $optionalCheck = $html.querySelector('.optional-width-check');
+            //let $optionalLabel = $html.querySelector('.optional-width-label');
+            //$optionalLabel.innerHTML = LANG.get('working-optional-kit');
         } else {
-            $optionalWidth.setAttribute('hidden', '');
+            //$optionalWidth.setAttribute('hidden', '');
         }
 
         let params = {
@@ -435,8 +481,29 @@ var APP = (function(){
             }
         };
 
+        let $parameterList = $html.querySelector('.parameter-list');
+        let html = '';
         for (const paramId of Object.keys(params)) {
             let param = params[paramId];
+
+            html += `<div class="parameter parameter-${paramId}">
+                <div class="parameter-title">${UTIL.capitalizeFirstLetter(paramId)}</div>
+                ${(paramId === 'width' ? optionalHtml : '')}
+                <div class="parameter-input">
+                    <div class="parameter-text">
+                        <input id="widthText" type="text" value="${param.min}">
+                    </div>
+                    <div class="parameter-slider">
+                        <div class="parameter-max">${param.max}m</div>
+                        <div class="parameter-min">${param.min}m</div>
+                        <input id="widthRange" type="range" step="1" max="${param.max}" min="${param.min}" value="${param.min}" oninput="APP.refreshCheckLabel(this);">
+                    </div>
+                </div>
+
+
+            </div>`;
+
+            /*let param = params[paramId];
             let $parameterTitle = $html.querySelector('.parameter-' + paramId + ' .parameter-title');
             let $parameterSlider = $html.querySelector('.parameter-' + paramId + ' .parameter-slider input');
             let $parameterMax = $html.querySelector('.parameter-' + paramId + ' .parameter-max');
@@ -446,10 +513,12 @@ var APP = (function(){
             $parameterMin.innerHTML = param.min + 'm';
             $parameterSlider.setAttribute('min', param.min);
             $parameterMax.innerHTML = param.max + 'm';
-            $parameterSlider.setAttribute('max', param.max);
+            $parameterSlider.setAttribute('max', param.max);*/
         }
+        $parameterList.innerHTML = html;
 
         $main.innerHTML = app.getStepHtml('params');
+        $html.innerHTML = html;
         $main.append($html);
 
         return null;
@@ -532,6 +601,7 @@ var APP = (function(){
         function getResultHtml(text, value) {
             let template = `<div class="result">
                 <div class="result-text">${text}</div>
+                <div class="result-line"></div>
                 <div class="result-value">${value}</div>
             </div>`;
 
@@ -545,21 +615,24 @@ var APP = (function(){
         html += getResultHtml('openening', opening.opening);
         html += getResultHtml('kg/min', opening.kgMin);
 
+        html += `<div class="result-separator"></div>`;
         html += getResultHtml('spreader', currentMachine.name);
         html += getResultHtml('discs height', '');
         html += getResultHtml('pto speed', '');
 
+        html += `<div class="result-separator"></div>`;
         html += getResultHtml('family', currentConcime.type);
         html += getResultHtml('product', currentConcime.name);
         html += getResultHtml('form', currentConcime.shape);
         html += getResultHtml('weight', currentConcime.weight);
 
+        html += `<div class="result-separator"></div>`;
         html += getResultHtml('working width', app.currentWorkingWidth);
         html += getResultHtml('speed', app.currentWorkingSpeed);
         html += getResultHtml('quantity', app.currentWorkingQuantity);
         $resultList.innerHTML = html;
 
-        $main.innerHTML = '';
+        $main.innerHTML = app.getStepHtml('result');
         $main.append($html);
 
         return null;

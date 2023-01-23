@@ -6,16 +6,21 @@
     <title>Eurospand</title>
 
     <link href="/css/style.css?v=1" rel="stylesheet" />
+    <link rel="manifest" href="/manifest.json">
 </head>
 <body>
 
     <div class="header">
-        <div class="logo"></div>
-        <div class="menu-button" onclick="APP.menuOpen();">
-            menu
-        </div>
+        <button class="logo" onclick="APP.changeContent('');">
+            <img src="/img/logo.svg" alt="">
+        </button>
+        <button class="menu-button" onclick="APP.menuOpen();">
+            <img src="/img/icons/menu.svg" alt="">
+        </button>
         <div class="menu">
-            <button class="menu-close" onclick="APP.menuClose();">X</button>
+            <button class="menu-close" onclick="APP.menuClose();">
+                <img src="/img/icons/close.svg" alt="">
+            </button>
 
             <button class="menu-saved"></button>
             <button class="menu-lang"></button>
@@ -30,8 +35,20 @@
     </div>
 
     <template data-section="index">
-        <button class="set-machine"></button>
-        <button class="set-machine"></button>
+        <div class="index">
+            <button class="set-machine" onclick="APP.changeContent('set-machine');">
+                <div class="button-title">Calcola apertura</div>
+                <div class="button-subtitle">hydraulic-spreader</div>
+            </button>
+            <button class="set-machine" onclick="APP.changeContent('flow-factor');">
+                <div class="button-title">Fattore di flusso</div>
+                <div class="button-subtitle">electronic-spreader</div>
+            </button>
+            <button class="set-machine" onclick="APP.changeContent('conversion');">
+                <div class="button-title">Conversioni</div>
+                <div class="button-subtitle"></div>
+            </button>
+        </div>
     </template>
     <template data-section="set-machine">
         <div class="machine-list"></div>
@@ -43,46 +60,11 @@
     </template>
 
     <template data-section="set-params">
-        <div class="optional-width" hidden>
-            <input class="optional-width-checkbox" id="optionalWidth" name="optionalWidth" type="checkbox" onchange="APP.refreshMaxWorkingWidth();">
-            <label class="optional-width-label" for="optionalWidth"></label>
-        </div>
-        <div class="parameter parameter-width">
-            <div class="parameter-title">Width</div>
-            <div class="parameter-text">
-                <input id="widthText" type="text">
-            </div>
-            <div class="parameter-slider">
-                <input id="widthRange" type="range" step="1" oninput="APP.refreshCheckLabel(this);">
-            </div>
-            <div class="parameter-max"></div>
-            <div class="parameter-min"></div>
-        </div>
-        <div class="parameter parameter-speed">
-            <div class="parameter-title">Speed</div>
-            <div class="parameter-text">
-                <input id="widthText" type="text">
-            </div>
-            <div class="parameter-slider">
-                <input id="widthRange" type="range" step="1" oninput="APP.refreshCheckLabel(this);">
-            </div>
-            <div class="parameter-max"></div>
-            <div class="parameter-min"></div>
-        </div>
-        <div class="parameter parameter-quantity">
-            <div class="parameter-title">Quantity</div>
-            <div class="parameter-text">
-                <input id="widthText" type="text">
-            </div>
-            <div class="parameter-slider">
-                <input id="widthRange" type="range" step="1" oninput="APP.refreshCheckLabel(this);">
-            </div>
-            <div class="parameter-max"></div>
-            <div class="parameter-min"></div>
-        </div>
-        <div class="cta">
-            <button class="params-reset" onclick="APP.paramsReset();">reset</button>
-            <button class="params-compute" onclick="APP.paramsCompute();">compute</button>
+        <div class="parameter-list"></div>
+
+        <div class="parameter-cta">
+            <button class="btn params-reset" onclick="APP.paramsReset();">reset</button>
+            <button class="btn btn-important params-compute" onclick="APP.paramsCompute();">compute</button>
         </div>
     </template>
 
@@ -90,9 +72,9 @@
         <div class="result-list">
 
         </div>
-        <div class="result-share">
-            <button onclick="APP.shareResult();">share</button>
-            <button onclick="APP.saveResult();">save</button>
+        <div class="result-cta">
+            <button class="btn" onclick="APP.shareResult();">share</button>
+            <button class="btn btn-important" onclick="APP.saveResult();">save</button>
         </div>
         <div class="result-alert">
 
