@@ -1,6 +1,7 @@
 var MACHINE_DATA = {
     "david-compact" : {
-        name: "David/Compact",
+        name: "David",
+        subtitle: "Compact",
         widthMin:1,
         widthMax:15,
         widthOpt: 18,
@@ -44,7 +45,8 @@ var MACHINE_DATA = {
         }
     },
     "david-compact-fruit" : {
-        name: "David/Compact Fruit",
+        name: "David Fruit",
+        subtitle: "Compact Fruit",
         widthMin:1,
         widthMax:"5 (12m pieno campo)",
         widthOpt: null,
@@ -69,7 +71,8 @@ var MACHINE_DATA = {
         },
     },
     "apollo-galileo" : {
-        name: "Apollo/Galileo",
+        name: "Galileo",
+        subtitle: "Apollo",
         widthMin:9,
         widthMax:18,
         widthOpt: null,
@@ -94,7 +97,8 @@ var MACHINE_DATA = {
         },
     },
     "jolly-zeus-18" : {
-        name: "Jolly/Zeus 18",
+        name: "Jolly 18",
+        subtitle: "Zeus 18",
         widthMin:9,
         widthMax:18,
         widthOpt: 24,
@@ -138,7 +142,8 @@ var MACHINE_DATA = {
         },
     },
     "jolly-zeus-18-fruit" : {
-        name: "Jolly/Zeus 18 Fruit",
+        name: "Jolly 18 Fruit",
+        subtitle: "Zeus 18 Fruit",
         widthMin:5,
         widthMax:"10 (18 pieno campo)",
         widthOpt: null,
@@ -163,7 +168,8 @@ var MACHINE_DATA = {
         },
     },
     "jolly-zeus-24" : {
-        name: "Jolly/Zeus 24",
+        name: "Jolly 24",
+        subtitle: "Zeus 24",
         widthMin:12,
         widthMax:24,
         widthOpt: null,
@@ -188,7 +194,8 @@ var MACHINE_DATA = {
         },
     },
     "jolly-zeus-28" : {
-        name: "Jolly/Zeus 28",
+        name: "Jolly 28",
+        subtitle: "Zeus 28",
         widthMin:15,
         widthMax:28,
         widthOpt: null,
@@ -213,7 +220,8 @@ var MACHINE_DATA = {
         },
     },
     "jolly-zeus-32" : {
-        name: "Jolly/Zeus 32",
+        name: "Jolly 32",
+        subtitle: "Zeus 32",
         widthMin:18,
         widthMax:32,
         widthOpt: null,
@@ -238,7 +246,8 @@ var MACHINE_DATA = {
         },
     },
     "elettra-crono-24" : {
-        name: "Elettra/Crono 24",
+        name: "Elettra 24",
+        subtitle: "Crono 24",
         widthMin:12,
         widthMax:24,
         widthOpt: null,
@@ -263,7 +272,8 @@ var MACHINE_DATA = {
         },
     },
     "elettra-crono-32" : {
-        name: "Elettra/Crono 32",
+        name: "Elettra 32",
+        subtitle: "Crono 32",
         widthMin:18,
         widthMax:32,
         widthOpt: null,

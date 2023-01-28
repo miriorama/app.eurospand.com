@@ -18,6 +18,9 @@
             <img src="/img/icons/menu.svg" alt="">
         </button>
         <div class="menu">
+            <div class="menu-img">
+                <img src="/img/logo-full.svg" alt="">
+            </div>
             <button class="menu-close" onclick="APP.menuClose();">
                 <img src="/img/icons/close.svg" alt="">
             </button>
@@ -27,6 +30,10 @@
             <button class="menu-unit"></button>
             <button class="menu-who"></button>
             <button class="menu-contact"></button>
+
+            <div class="menu-footer">
+                © 2023 - P.IVA 00164000044
+            </div>
         </div>
     </div>
 
@@ -37,21 +44,50 @@
     <template data-section="index">
         <div class="index">
             <button class="set-machine" onclick="APP.changeContent('set-machine');">
-                <div class="button-title">Calcola apertura</div>
-                <div class="button-subtitle">hydraulic-spreader</div>
+                <div class="button-img">
+                    <img src="/img/apertura.jpg" alt="">
+                </div>
+                <div class="button-text">
+                    <div class="button-title">
+                        <span>Calcola apertura</span>
+                    </div>
+                    <div class="button-subtitle">
+                        <span>Calcola apertura</span>
+                        <img src="/img/icons/chevron-right-white.svg" alt="">
+                    </div>
+                </div>
             </button>
             <button class="set-machine" onclick="APP.changeContent('flow-factor');">
-                <div class="button-title">Fattore di flusso</div>
-                <div class="button-subtitle">electronic-spreader</div>
+                <div class="button-img">
+                    <img src="/img/flusso.jpg" alt="">
+                </div>
+                <div class="button-text">
+                    <div class="button-title">Fattore di flusso</div>
+                    <div class="button-subtitle">
+                        <span>Fattore di flusso</span>
+                        <img src="/img/icons/chevron-right-white.svg" alt="">
+                    </div>
+                </div>
             </button>
             <button class="set-machine" onclick="APP.changeContent('conversion');">
-                <div class="button-title">Conversioni</div>
-                <div class="button-subtitle"></div>
+                <div class="button-img">
+                    <img src="/img/conversioni.jpg" alt="">
+                </div>
+                <div class="button-text">
+                    <div class="button-title"></div>
+                    <div class="button-subtitle">
+                        <span>Conversioni</span>
+                        <img src="/img/icons/chevron-right-white.svg" alt="">
+                    </div>
+                </div>
             </button>
         </div>
     </template>
     <template data-section="set-machine">
         <div class="machine-list"></div>
+    </template>
+    <template data-section="machine-detail">
+
     </template>
 
     <template data-section="set-concime">
@@ -87,6 +123,34 @@
             <div class="machine-title"></div>
             <div class="machine-subtitle"></div>
             <div class="machine-desc"></div>
+        </div>
+    </template>
+
+    <template data-section="flow-factor">
+        <div class="field">
+            <input type="text" id="flowWeight">
+            <label for="flowWeight">flowWeight</label>
+        </div>
+        <div class="field">
+            <input type="text" id="flowQuantityStart">
+            <label for="flowQuantityStart">flowQuantityStart</label>
+        </div>
+        <div class="field">
+            <input type="text" id="flowQuantityEnd">
+            <label for="flowQuantityEnd">flowQuantityEnd</label>
+        </div>
+        <div class="field">
+            <input type="text" id="flowLiterStart">
+            <label for="flowLiterStart">flowLiterStart</label>
+        </div>
+        <div class="field">
+            <input type="text" id="flowLiterEnd">
+            <label for="flowLiterEnd">flowLiterEnd</label>
+        </div>
+
+        <div class="parameter-cta">
+            <button class="btn params-reset" onclick="APP.paramsReset();">reset</button>
+            <button class="btn btn-important params-compute" onclick="APP.paramsCompute();">compute</button>
         </div>
     </template>
 

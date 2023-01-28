@@ -143,6 +143,11 @@ var APP = (function(){
                 template: 'set-machine',
                 callback: app.initSetMachine
             },
+            {   regex: '^machine/(?<id>[^/]*)/?$',
+                template: 'machine-detail',
+                callback: app.initMachine,
+                animate: false
+            },
             {   regex: '^set-concime/?$',
                 template: 'set-concime',
                 callback: app.initSetConcime
@@ -154,6 +159,10 @@ var APP = (function(){
             {   regex: '^result/?$',
                 template: 'result',
                 callback: app.initResult
+            },
+            {   regex: '^flow-factor/?$',
+                template: 'flow-factor',
+                callback: app.initFlowFactor
             }
         ];
 
@@ -172,6 +181,9 @@ var APP = (function(){
             let match = app.hash.match(regex);
 
             if(match) {
+                /*if(route.hasOwnProperty(animate)) {
+                    animate = route.animate;
+                }*/
                 let params = match.groups;
                 let $template = document.querySelector(`template[data-section=${route.template}]`);
                 if ($template) {
@@ -179,6 +191,11 @@ var APP = (function(){
                     app.previousTemplate = app.currentTemplate;
                     }
                     app.currentTemplate = route.template;
+
+                    if(app.currentTemplate !== 'machine-detail') {
+                        //app.hideMachine();
+                    }
+
                     let $html = $template.content.cloneNode(true);
 
                     if(animate) {
@@ -208,7 +225,7 @@ var APP = (function(){
 
                         }
 
-                        $main.setAttribute('data-section', route.template);
+                        //$main.setAttribute('data-section', route.template);
 
                         if(animate) {
                             window.setTimeout(function() {
@@ -234,12 +251,8 @@ var APP = (function(){
         location.hash = content;
     }
     app.initIndex = function($html) {
-        console.log('test');
-
         $main.innerHTML = '';
         $main.append($html);
-
-
 
         return null;
     }
@@ -277,9 +290,12 @@ var APP = (function(){
                 <div class="machine-img">
                     <img src="/img/machine/${machineId}.jpg" alt="${machine.name}" />
                 </div>
-                <div class="machine-title">${machine.name}</div>
-                <div class="machine-cta">
-                    <div class="btn">${LANG.get('select')}</div>
+                <div class="machine-title">
+                    ${machine.name}
+                    <small>${machine.subtitle}</small>
+                </div>
+                <div class="machine-info" onclick="event.stopPropagation();APP.showMachine('${machineId}');">
+                    <img src="/img/icons/info-white.svg" />
                 </div>
             </button>`;
         }
@@ -336,26 +352,93 @@ var APP = (function(){
 
         return html;
     }
-    app.showMachine = function(machineId) {
-        let machine = app.getMachine(machineId);
+    app.initMachine = function($html, params) {
+        let machine = app.getMachine(params.id);
 
-        let $machineImg = 'machine-img';
-        let $machineTitle = 'machine-title';
-        let $machineSubtitle = 'machine-subtitle';
-        let $machineDesc = 'machine-desc';
+        let machineImg = 'machine-img';
+        let machineTitle = 'machine-title';
+        let machineSubtitle = 'machine-subtitle';
+        let machineDesc = 'machine-desc';
 
-        let html = `<div class="machine">
-            <div class="machine-img">${machineImg}</div>
-            <div class="machine-title">${machineTitle}</div>
-            <div class="machine-subtitle">${machineSubtitle}</div>
+        let html = `<div class="machine-detail">
+            <button class="machine-close" onclick="APP.hideMachine();">
+                <img src="/img/icons/close.svg" alt="">
+            </button>
+            <div class="machine-img">
+                <img src="/img/machine/${params.id}.jpg" alt="${machine.name}" />
+            </div>
+            <div class="machine-title">
+                ${machine.name}
+            </div>
+            <div class="machine-subtitle">
+                ${machine.subtitle}
+                </div>
             <div class="machine-desc">${machineDesc}</div>
         </div>`;
 
-        let $html = document.createElement('div');
-        $html.innerHTML = html;
+        let $div = document.createElement('div');
+        $div.classList.add('machine-detail-container','is-visible');
+        $div.innerHTML = html;
 
-        document.body.appendChild($html);
-        document.body.classList.add('alert-overflow');
+        $main.append($div);
+        //$main.append($html);
+
+        //document.querySelector('.machine-detail-container').classList.add('is-visible');
+
+        return null;
+    }
+    app.showMachine = function(machineId) {
+        let machine = app.getMachine(machineId);
+        let langMachine = LANG.get(machineId);
+
+        let html = `<div class="machine-detail">
+            <div class="machine-title">
+                ${machine.name}
+                <small>${machine.subtitle}</small>
+
+                <button class="machine-close" onclick="APP.hideMachine();">
+                    <img src="/img/icons/close-white.svg" alt="">
+                </button>
+            </div>
+            <div class="machine-scroll">
+                <div class="machine-img">
+                    <img src="/img/machine/${machineId}.jpg" alt="${machine.name}" />
+                    <div class="machine-subtitle">
+                        ${langMachine.subtitle}
+                    </div>
+                </div>
+
+                <div class="machine-desc">
+                    <b>${langMachine.shortDescription}</b>
+                    ${langMachine.description}
+                </div>
+            </div>
+        </div>`;
+
+        let $div = document.createElement('div');
+        $div.classList.add('machine-detail-container');
+        $div.innerHTML = html;
+
+        $main.append($div);
+
+        setTimeout(() => {
+            document.querySelector('.machine-detail-container').classList.add('is-visible');
+        }, 300);
+
+        return null;
+    }
+    app.hideMachine = function() {
+        if(app.previousTemplate) {
+            //app.changeContent(app.previousTemplate);
+        }
+
+        let $machineDetailContainer = document.querySelector('.machine-detail-container');
+        if($machineDetailContainer) {
+            $machineDetailContainer.classList.remove('is-visible');
+            setTimeout(() => {
+                $machineDetailContainer.remove();
+            }, 300);
+        }
     }
 
     // CONCIME
@@ -386,8 +469,8 @@ var APP = (function(){
                     <img src="/img/concime/${concimeId}.png" alt="${concime.name}" />
                 </div>
                 <div class="concime-title">${concime.name}</div>
-                <div class="concime-cta">
-                    <button class="btn" >${LANG.get('select')}</button>
+                <div class="concime-info" onclick="event.stopPropagation();APP.showConcime('${concimeId}');">
+                    <img src="/img/icons/info.svg" />
                 </div>
             </div>`;
         }
@@ -438,6 +521,83 @@ var APP = (function(){
         if(app.currentConcime && app.currentMachine) {
             let $paramsStep = document.querySelector('.step[data-step=params]');
             $paramsStep.classList.remove('is-disabled');
+        }
+    }
+    app.showConcime = function(concimeId) {
+        let concime = app.getConcime(concimeId);
+        let langconcime = LANG.get(concimeId);
+
+        let rows = [
+            {category: 'Information'},
+            {name: 'Family', value: concime.category || ''},
+            {name: 'Country', value: concime.country || ''},
+            {name: 'Form', value: concime.producer || ''},
+            {name: 'Manufacturer', value: concime.producer || ''},
+            {name: 'KG/DM3', value: concime.weight || ''},
+            {category: 'Fractionation'},
+            {name: '', value: ''},
+            {name: '', value: ''},
+            {category: 'Chemical composition'},
+            {name: '', value: concime.chemicalComposition_it || ''},
+        ];
+
+        let propertyListHtml = '';
+        for (const row of rows) {
+            if(row.category) {
+                propertyListHtml += `<div class="property-category">${row.category}</div>`;
+            } else if(row.value) {
+                propertyListHtml += `<div class="property">
+                    <div class="property-name">${row.name}</div>
+                    <div class="property-value">${row.value}</div>
+                </div>`;
+            }
+        }
+
+        let html = `<div class="concime-detail">
+            <div class="concime-title">
+                <small>${concime.type}</small>
+
+                <button class="concime-close" onclick="APP.hideConcime();">
+                    <img src="/img/icons/close-white.svg" alt="">
+                </button>
+            </div>
+            <div class="concime-scroll">
+                <div class="concime-img">
+                    <img src="/img/concime/${concimeId}.png" alt="${concime.name}" />
+                    <div class="concime-subtitle">
+                        ${concime.name}
+                    </div>
+                </div>
+
+                <div class="property-list">
+                    ${propertyListHtml}
+                </div>
+            </div>
+        </div>`;
+
+        let $div = document.createElement('div');
+        $div.classList.add('concime-detail-container');
+        $div.innerHTML = html;
+
+        $main.append($div);
+
+        setTimeout(() => {
+            document.querySelector('.concime-detail-container').classList.add('is-visible');
+        }, 300);
+
+        return null;
+    }
+    app.hideConcime = function() {
+        if(app.previousTemplate) {
+            //app.changeContent(app.previousTemplate);
+        }
+
+        let $machineDetailContainer = document.querySelector('.concime-detail-container');
+        if($machineDetailContainer) {
+            $machineDetailContainer.classList.remove('is-visible');
+            setTimeout(() => {
+                $machineDetailContainer.remove();
+            }, 300);
         }
     }
 
@@ -642,6 +802,39 @@ var APP = (function(){
     }
     app.getResultList = function() {
 
+    }
+
+    // FLOW FACTOR
+    app.getFlowStepHtml = function(step) {
+        let html = '';
+        let cssClass = 'is-selected';
+        let stepParamsDisabled = (app.currentConcime && app.currentMachine ? false : true);
+
+        html = `<div class="step-list">
+            <button class="step ${('machine' === step ? cssClass : '')}" data-step="machine" onclick="APP.changeContent('set-machine');">
+                <div class="step-number">1</div>
+                <div class="step-title">${LANG.get('step-machine')}</div>
+                <div class="step-subtitle">Set your spreader</div>
+            </button>
+            <button class="step ${(stepParamsDisabled ? 'is-disabled' : '')} ${('params' === step ? cssClass : '')}" data-step="params" onclick="APP.changeContent('set-params');">
+                <div class="step-number">2</div>
+                <div class="step-title">${LANG.get('step-params')}</div>
+                <div class="step-subtitle">Set parameters</div>
+            </button>
+            <button class="step ${(stepParamsDisabled ? 'is-disabled' : '')} ${('result' === step ? cssClass : '')}" data-step="result" onclick="APP.changeContent('result');">
+                <div class="step-number">3</div>
+                <div class="step-title">RESULT</div>
+                <div class="step-subtitle"> </div>
+            </button>
+        </div>`;
+
+        return html;
+    }
+    app.initFlowFactor = function($html) {
+        $main.innerHTML = app.getFlowStepHtml('machine');
+        $main.append($html);
+
+        return null;
     }
 
     return app;

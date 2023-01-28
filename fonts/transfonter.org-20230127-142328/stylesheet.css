@@ -1,0 +1,36 @@
+@font-face {
+    font-family: 'Frutiger LT Pro';
+    src: url('FrutigerLTPro-LightCn.woff2') format('woff2'),
+        url('FrutigerLTPro-LightCn.woff') format('woff');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Frutiger LT Pro 47 Light Cn';
+    src: url('FrutigerLTPro-LightCnIta.woff2') format('woff2'),
+        url('FrutigerLTPro-LightCnIta.woff') format('woff');
+    font-weight: 300;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Frutiger LT Pro 47 Light Cn';
+    src: url('FrutigerLTPro-BoldCnIta.woff2') format('woff2'),
+        url('FrutigerLTPro-BoldCnIta.woff') format('woff');
+    font-weight: bold;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Frutiger LT Pro 47 Light Cn';
+    src: url('FrutigerLTPro-BoldCn.woff2') format('woff2'),
+        url('FrutigerLTPro-BoldCn.woff') format('woff');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
