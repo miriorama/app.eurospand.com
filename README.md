@@ -1,2 +1,1 @@
-# da chiedere
-- aperture minime
+https://miriorama.github.io/app.eurospand.com/
