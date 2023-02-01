@@ -10,32 +10,44 @@
 </head>
 <body>
 
-    <div class="header">
-        <button class="logo" onclick="APP.changeContent('');">
-            <img src="/img/logo.svg" alt="">
-        </button>
-        <button class="menu-button" onclick="APP.menuOpen();">
-            <img src="/img/icons/menu.svg" alt="">
-        </button>
-        <div class="menu">
-            <div class="menu-img">
-                <img src="/img/logo-full.svg" alt="">
-            </div>
-            <button class="menu-close" onclick="APP.menuClose();">
-                <img src="/img/icons/close.svg" alt="">
+    <div class="header-container">
+        <div class="header">
+            <button class="logo" onclick="APP.changeContent('');">
+                <img src="/img/logo.svg" alt="">
             </button>
-
-            <button class="menu-saved"></button>
-            <button class="menu-lang"></button>
-            <button class="menu-unit"></button>
-            <button class="menu-who"></button>
-            <button class="menu-contact"></button>
-
-            <div class="menu-footer">
-                © 2023 - P.IVA 00164000044
-            </div>
+            <button class="menu-button" onclick="APP.menuOpen();">
+                <img src="/img/icons/menu.svg" alt="">
+            </button>
         </div>
     </div>
+    <div class="menu">
+        <div class="menu-img">
+            <img src="/img/logo-full.svg" alt="">
+        </div>
+        <button class="menu-close" onclick="APP.menuClose();">
+            <img src="/img/icons/close.svg" alt="">
+        </button>
+
+        <button class="menu-saved"></button>
+        <button class="menu-lang"></button>
+        <button class="menu-unit"></button>
+        <button class="menu-who"></button>
+        <button class="menu-contact"></button>
+
+        <div class="menu-footer">
+            © 2023 - P.IVA 00164000044
+        </div>
+    </div>
+
+    <!--<div class="title">
+        <div class="red">
+            Calculate opening
+        </div>
+
+        <div class="gray" onclick="APP.hideConcime();">
+            test test test
+        </div>
+    </div>-->
 
     <div class="main">
 
@@ -44,32 +56,57 @@
     <template data-section="index">
         <div class="index">
             <button class="set-machine" onclick="APP.changeContent('set-machine');">
-                <div class="button-img">
-                    <img src="/img/apertura.jpg" alt="">
+                <div class="button-header">
+                    <span>Hydraulic control fertilizer spreader</span>
                 </div>
-                <div class="button-text">
+                <div class="button-footer">
+                    <div class="button-img">
+                        <img src="/img/icons/opening.svg" alt="">
+                    </div>
                     <div class="button-title">
-                        <span>Calcola apertura</span>
+                        <div>
+                            <span>Calculate opening</span>
+                        </div>
+                        <img src="/img/icons/chevron-right-white.svg" alt="">
                     </div>
-                    <div class="button-subtitle">
-                        <span>Calcola apertura</span>
+                </div>
+
+
+            </button>
+            <button class="set-machine" onclick="APP.changeContent('flow-factor');" disabled>
+                <div class="button-header">
+                    <span>Electronic control fertilizer spreader</span>
+                </div>
+                <div class="button-footer">
+                    <div class="button-img">
+                        <img src="/img/icons/flow-factor.svg" alt="">
+                    </div>
+                    <div class="button-title">
+                        <div>
+                            <span>Flow factor</span>
+                        </div>
                         <img src="/img/icons/chevron-right-white.svg" alt="">
                     </div>
                 </div>
             </button>
-            <button class="set-machine" onclick="APP.changeContent('flow-factor');">
-                <div class="button-img">
-                    <img src="/img/flusso.jpg" alt="">
+            <button class="set-machine" onclick="APP.changeContent('conversion');" disabled>
+                <div class="button-header">
+                    <span>Convert differents units of measurement</span>
                 </div>
-                <div class="button-text">
-                    <div class="button-title">Fattore di flusso</div>
-                    <div class="button-subtitle">
-                        <span>Fattore di flusso</span>
+                <div class="button-footer">
+                    <div class="button-img">
+                        <img src="/img/icons/conversion.svg" alt="">
+                    </div>
+                    <div class="button-title">
+                        <div>
+                            <span>Conversions</span>
+                            <small></small>
+                        </div>
                         <img src="/img/icons/chevron-right-white.svg" alt="">
                     </div>
                 </div>
             </button>
-            <button class="set-machine" onclick="APP.changeContent('conversion');">
+            <!--<button class="set-machine" onclick="APP.changeContent('conversion');">
                 <div class="button-img">
                     <img src="/img/conversioni.jpg" alt="">
                 </div>
@@ -80,7 +117,10 @@
                         <img src="/img/icons/chevron-right-white.svg" alt="">
                     </div>
                 </div>
-            </button>
+            </button>-->
+            <div class="index-footer">
+                © 2023 - P.IVA 00164000044
+            </div>
         </div>
     </template>
     <template data-section="set-machine">

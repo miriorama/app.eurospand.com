@@ -11,11 +11,11 @@
 
 let LANG_DATA = {
 
-    "menu-saved" : "saved",
-    "menu-lang" : "lang",
-    "menu-unit" : "unit",
-    "menu-who" : "who",
-    "menu-contact" : "contact",
+    "menu-saved" : "Saved works",
+    "menu-lang" : "Change language",
+    "menu-unit" : "Change unit of measure",
+    "menu-who" : "Who we are",
+    "menu-contact" : "Contacts",
 
     "concime-shape-spherical": "Spherical",
     "concime-shape-mineral": "Mineral",
@@ -34,6 +34,11 @@ let LANG_DATA = {
     "step-machine" : "machine",
     "step-concime" : "concime",
     "step-params" : "params",
+
+    "step-description-machine" : "Set your spreader",
+    "step-description-concime" : "Set the product",
+    "step-description-params" : "Set working parameters",
+    "step-description-result" : "Result",
 
     "welcome-to" : "Willkommen zu",
     "device-synchronisation-in-progress" : "Gerätesynchronisierung wird ausgeführt",

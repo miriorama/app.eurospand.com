@@ -114,17 +114,20 @@ var API = (function () {
 
 var APP = (function(){
     let app = {
-        debug: true,
+        debug: false,
         currentMachine: null,
         currentConcime: null,
         concimeTypeList: ['fertilizzanti', 'semi', 'lumachicida']
     }
 
-    let $main, $menu;
+    let $body, $main, $menu, $mainTitle, $mainSubtitle;
 
     app.init = function() {
+        $body = document.querySelector('body');
         $main = document.querySelector('.main');
         $menu = document.querySelector('.menu');
+        $mainTitle = document.querySelector('.title .red');
+        $mainSubtitle = document.querySelector('.title .gray');
 
         if(app.debug) {
             app.currentMachine = 'david-compact';
@@ -175,6 +178,7 @@ var APP = (function(){
     app.onHashChange = function() {
         app.hash = location.hash.substring(1);
         let animate = true;
+        let animationTime = 200;
 
         for (const route of app.routes) {
             let regex = new RegExp(route.regex, 'i');
@@ -204,7 +208,7 @@ var APP = (function(){
                         if(app.previousTemplate) {
                             setTimeout(function() {
                                 hide();
-                            }, 300);
+                            }, animationTime);
                         } else {
                             hide();
                         }
@@ -230,7 +234,7 @@ var APP = (function(){
                         if(animate) {
                             window.setTimeout(function() {
                                 show();
-                            }, 300);
+                            }, animationTime);
                         } else {
                             show();
                         }
@@ -256,6 +260,15 @@ var APP = (function(){
 
         return null;
     }
+    app.setTitle = function(title, subtitle) {
+        if($mainTitle) {
+            $mainTitle.innerHTML = title;
+        }
+
+        if($mainSubtitle && subtitle) {
+            $mainSubtitle.innerHTML = subtitle;
+        }
+    }
 
     app.initMenu = function() {
         let $menuSaved = $menu.querySelector('.menu-saved');
@@ -272,9 +285,107 @@ var APP = (function(){
     }
     app.menuOpen = function() {
         $menu.classList.add('is-visible');
+        $body.classList.add('is-overflow');
     }
     app.menuClose = function() {
         $menu.classList.remove('is-visible');
+        $body.classList.remove('is-overflow');
+    }
+
+    // STEP
+    app.getStepHtml = function(step) {
+        let $html = document.createElement('div');
+        $html.classList.add('step-list');
+
+        let cssClass = 'is-selected';
+
+
+        let title = "Calculate opening";
+        let subtitle = LANG.get('step-description-' + step);
+        let html = `<div class="title">
+            <div class="red">
+                <span>${title}</span>
+            </div>
+
+            <div class="gray" onclick="APP.hideConcime();">
+                ${subtitle}
+            </div>
+        </div>`;
+
+        html += `<div class="step-list">
+            <button class="step" data-step="machine" onclick="APP.changeContent('set-machine');">
+                <div class="step-number">1</div>
+                <div class="step-title">${LANG.get('step-machine')}</div>
+                <div class="step-img">
+                    <img src="/img/icons/funnel${('machine' === step ? '-white' : '')}.svg" />
+                </div>
+                <div class="step-subtitle">Set your spreader</div>
+            </button>
+            <button class="step" data-step="concime" onclick="APP.changeContent('set-concime');">
+                <div class="step-number">2</div>
+                <div class="step-title">${LANG.get('step-concime')}</div>
+                <div class="step-img">
+                    <img src="/img/icons/flower${('concime' === step ? '-white' : '')}.svg" />
+                </div>
+                <div class="step-subtitle">Set the product</div>
+            </button>
+            <button class="step" data-step="params" onclick="APP.changeContent('set-params');">
+                <div class="step-number">3</div>
+                <div class="step-title">${LANG.get('step-params')}</div>
+                <div class="step-img">
+                    <img src="/img/icons/slider${('params' === step ? '-white' : '')}.svg" />
+                </div>
+                <div class="step-subtitle">Set working parameters</div>
+            </button>
+            <button class="step" data-step="result" onclick="APP.changeContent('result');">
+                <div class="step-number">4</div>
+                <div class="step-title">RESULT</div>
+                <div class="step-img">
+                    <img src="/img/icons/list-result${('result' === step ? '-white' : '')}.svg" />
+                </div>
+                <div class="step-subtitle">Result</div>
+            </button>
+        </div>`;
+        $html.innerHTML = html;
+
+        let $step = $html.querySelector(`[data-step=${step}]`);
+        $step.classList.add('is-selected');
+
+        let stepParamsDisabled = (app.currentConcime && app.currentMachine ? false : true);
+        let $stepParams = $html.querySelector(`[data-step=params]`);
+        let $stepResult = $html.querySelector(`[data-step=result]`);
+        if(stepParamsDisabled) {
+            $stepParams.classList.add('is-disabled');
+            $stepResult.classList.add('is-disabled');
+        } else {
+            $stepParams.classList.remove('is-disabled');
+            $stepResult.classList.remove('is-disabled');
+        }
+
+        if(app.currentMachine) {
+            let $stepMachine = $html.querySelector(`[data-step=machine]`);
+            $stepMachine.classList.add('is-set');
+            let $machineTitle = $html.querySelector(`[data-step=machine] .step-subtitle`);
+            $machineTitle.innerHTML = app.getMachine(app.currentMachine).name;
+        }
+        if(app.currentConcime) {
+            let $stepConcime = $html.querySelector(`[data-step=concime]`);
+            $stepConcime.classList.add('is-set');
+            let $concimeTitle = $html.querySelector(`[data-step=concime] .step-subtitle`);
+            $concimeTitle.innerHTML = app.getConcime(app.currentConcime).name;
+        }
+
+        if (app.currentWorkingWidth && app.currentWorkingSpeed && app.currentWorkingQuantity) {
+            let $stepParams = $html.querySelector(`[data-step=params]`);
+            $stepParams.classList.add('is-set');
+        }
+
+        /*let title = LANG.get('step-description-' + step);
+        html += `<div class="page-title">
+            ${title}
+        </div>`*/
+
+        return $html.innerHTML;
     }
 
     // MACHINE
@@ -290,18 +401,27 @@ var APP = (function(){
                 <div class="machine-img">
                     <img src="/img/machine/${machineId}.jpg" alt="${machine.name}" />
                 </div>
-                <div class="machine-title">
-                    ${machine.name}
-                    <small>${machine.subtitle}</small>
-                </div>
-                <div class="machine-info" onclick="event.stopPropagation();APP.showMachine('${machineId}');">
-                    <img src="/img/icons/info-white.svg" />
+                <div class="machine-footer">
+
+                    <div class="machine-info" onclick="event.stopPropagation();APP.showMachine('${machineId}');">
+                        <img src="/img/icons/info-white.svg" />
+                    </div>
+                        <div class="machine-title">
+                            <div>
+                            ${machine.name}
+                            <small>${machine.subtitle}</small>
+                            </div>
+                        <img src="/img/icons/chevron-right-white.svg" />
+                    </div>
                 </div>
             </button>`;
         }
-        $machineList.innerHTML = html;
 
+        app.setTitle('Calculate opening', LANG.get('step-description-machine'));
+
+        $machineList.innerHTML = html;
         $main.innerHTML = app.getStepHtml('machine');
+
         $main.append($html);
 
         return null;
@@ -320,38 +440,14 @@ var APP = (function(){
 
         app.currentMachine = machineId;
         app.refreshStepList();
-        app.changeContent('set-concime');
-    }
-    app.getStepHtml = function(step) {
-        let html = '';
-        let cssClass = 'is-selected';
-        let stepParamsDisabled = (app.currentConcime && app.currentMachine ? false : true);
 
-        html = `<div class="step-list">
-            <button class="step ${('machine' === step ? cssClass : '')}" data-step="machine" onclick="APP.changeContent('set-machine');">
-                <div class="step-number">1</div>
-                <div class="step-title">${LANG.get('step-machine')}</div>
-                <div class="step-subtitle">Set your spreader</div>
-            </button>
-            <button class="step ${('concime' === step ? cssClass : '')}" data-step="concime" onclick="APP.changeContent('set-concime');">
-                <div class="step-number">2</div>
-                <div class="step-title">${LANG.get('step-concime')}</div>
-                <div class="step-subtitle">Set the product</div>
-            </button>
-            <button class="step ${(stepParamsDisabled ? 'is-disabled' : '')} ${('params' === step ? cssClass : '')}" data-step="params" onclick="APP.changeContent('set-params');">
-                <div class="step-number">3</div>
-                <div class="step-title">${LANG.get('step-params')}</div>
-                <div class="step-subtitle">Set working parameters</div>
-            </button>
-            <button class="step ${(stepParamsDisabled ? 'is-disabled' : '')} ${('result' === step ? cssClass : '')}" data-step="result" onclick="APP.changeContent('result');">
-                <div class="step-number">4</div>
-                <div class="step-title">RESULT</div>
-                <div class="step-subtitle"> </div>
-            </button>
-        </div>`;
-
-        return html;
+        if(!app.currentConcime) {
+            app.changeContent('set-concime');
+        } else {
+            app.changeContent('set-params');
+        }
     }
+
     app.initMachine = function($html, params) {
         let machine = app.getMachine(params.id);
 
@@ -448,7 +544,7 @@ var APP = (function(){
         let concimeList = app.getConcime();
 
         // Tipi di concime
-        let html = '';
+        let html = '<div class="concime-type-title">Filter by:</div>';
         for (const concimeType of app.concimeTypeList) {
             let concimeTypeName = UTIL.capitalizeFirstLetter(concimeType);
             html += `<button class="concime-type" onclick="APP.setConcimeType(this, '${concimeType}');">
@@ -464,20 +560,27 @@ var APP = (function(){
         for (const concimeId of Object.keys(concimeList)) {
             let concime = concimeList[concimeId];
 
-            html += `<div class="concime" data-concime-type="${concime.type}" onclick="APP.setConcime('${concimeId}');">
+            html += `<button class="concime" data-concime-type="${concime.type}" onclick="APP.setConcime('${concimeId}');">
                 <div class="concime-img">
                     <img src="/img/concime/${concimeId}.png" alt="${concime.name}" />
                 </div>
-                <div class="concime-title">${concime.name}</div>
-                <div class="concime-info" onclick="event.stopPropagation();APP.showConcime('${concimeId}');">
-                    <img src="/img/icons/info.svg" />
+                <div class="concime-footer">
+                    <div class="concime-info" onclick="event.stopPropagation();APP.showConcime('${concimeId}');">
+                        <img src="/img/icons/info-white.svg" />
+                    </div>
+                    <div class="concime-title">
+                        <div>${concime.name}</div>
+                        <img src="/img/icons/chevron-right-white.svg" />
+                    </div>
                 </div>
-            </div>`;
+            </button>`;
         }
         $concimeList.innerHTML = html;
 
         $main.innerHTML = app.getStepHtml('concime');
         $main.append($html);
+
+        app.setTitle('Calculate opening', LANG.get('step-description-concime'));
 
         return null;
     }
@@ -516,6 +619,12 @@ var APP = (function(){
         app.currentConcime = concimeId;
         app.refreshStepList();
         app.changeContent('set-params');
+
+        if(!app.currentMachine) {
+            app.changeContent('set-machine');
+        } else {
+            app.changeContent('set-params');
+        }
     }
     app.refreshStepList = function() {
         if(app.currentConcime && app.currentMachine) {
@@ -548,6 +657,7 @@ var APP = (function(){
             } else if(row.value) {
                 propertyListHtml += `<div class="property">
                     <div class="property-name">${row.name}</div>
+                    <div class="property-line"></div>
                     <div class="property-value">${row.value}</div>
                 </div>`;
             }
@@ -603,8 +713,13 @@ var APP = (function(){
 
     // PARAMS
     app.initSetWorkingParameters = function($html) {
+        if(!app.currentMachine) {
+            app.changeContent('set-machine');
+        }
+        if(!app.currentConcime) {
+            app.changeContent('set-concime');
+        }
         let currentMachine = app.getMachine(app.currentMachine);
-
 
         let optionalTemplate = `<div class="optional-width" hidden>
             <input class="optional-width-checkbox switch" id="optionalWidth" name="optionalWidth" type="checkbox" onchange="APP.refreshMaxWorkingWidth();">
@@ -629,15 +744,21 @@ var APP = (function(){
         let params = {
             'width': {
                 min: currentMachine.widthMin,
-                max: app.getMaxWidth(app.currentMachine, app.currentConcime)
+                max: app.getMaxWidth(app.currentMachine, app.currentConcime),
+                unit: 'm',
+                current: app.currentWorkingWidth
             },
             'speed': {
                 min: 6,
-                max: 20
+                max: 20,
+                unit: 'km/h',
+                current: app.currentWorkingSpeed
             },
             'quantity': {
                 min: 3,
-                max: 1000
+                max: 1000,
+                unit: 'kg/ha',
+                current: app.currentWorkingQuantity
             }
         };
 
@@ -645,18 +766,19 @@ var APP = (function(){
         let html = '';
         for (const paramId of Object.keys(params)) {
             let param = params[paramId];
+            let current = param.current || param.min;
 
             html += `<div class="parameter parameter-${paramId}">
                 <div class="parameter-title">${UTIL.capitalizeFirstLetter(paramId)}</div>
                 ${(paramId === 'width' ? optionalHtml : '')}
                 <div class="parameter-input">
                     <div class="parameter-text">
-                        <input id="widthText" type="text" value="${param.min}">
+                        <input id="widthText" type="text" value="${current}">
                     </div>
                     <div class="parameter-slider">
-                        <div class="parameter-max">${param.max}m</div>
-                        <div class="parameter-min">${param.min}m</div>
-                        <input id="widthRange" type="range" step="1" max="${param.max}" min="${param.min}" value="${param.min}" oninput="APP.refreshCheckLabel(this);">
+                        <div class="parameter-max">${param.max} ${param.unit}</div>
+                        <div class="parameter-min">${param.min} ${param.unit}</div>
+                        <input id="widthRange" type="range" step="1" max="${param.max}" min="${param.min}" value="${current}" oninput="APP.refreshCheckLabel(this);">
                     </div>
                 </div>
 
@@ -680,6 +802,8 @@ var APP = (function(){
         $main.innerHTML = app.getStepHtml('params');
         $html.innerHTML = html;
         $main.append($html);
+
+        app.setTitle('Calculate opening', LANG.get('step-description-params'));
 
         return null;
     }
@@ -754,43 +878,63 @@ var APP = (function(){
 
     // RESULT
     app.initResult = function($html) {
+        if(!app.currentMachine) {
+            app.changeContent('set-machine');
+        }
+        if(!app.currentConcime) {
+            app.changeContent('set-concime');
+        }
         let currentMachine = app.getMachine(app.currentMachine);
         let currentConcime = app.getConcime(app.currentConcime);
         let $resultList = $html.querySelector('.result-list');
 
-        function getResultHtml(text, value) {
-            let template = `<div class="result">
+        function getResultHtml(name, value, isCategory = false) {
+            /*let template = `<div class="property">
                 <div class="result-text">${text}</div>
                 <div class="result-line"></div>
                 <div class="result-value">${value}</div>
-            </div>`;
+            </div>`;*/
 
-            return template;
+            let isImportant = (name.toLowerCase() === 'opening' ? true : false);
+
+            let html = '';
+            if(isCategory) {
+                html += `<div class="property-category">${name}</div>`;
+            } else {
+                html += `<div class="property ${(isImportant ? 'is-important' : '')}">
+                    <div class="property-name">${name}</div>
+                    <div class="property-line"></div>
+                    <div class="property-value">${value}</div>
+                </div>`;
+            }
+
+            return html;
         }
 
         let html = '';
 
         let opening = app.getOpening(app.currentMachine, app.currentConcime);
 
-        html += getResultHtml('openening', opening.opening);
-        html += getResultHtml('kg/min', opening.kgMin);
+        html += getResultHtml('Result', currentMachine.name, true);
+        html += getResultHtml('Opening', opening.opening);
+        html += getResultHtml('Kg/min', opening.kgMin);
 
-        html += `<div class="result-separator"></div>`;
-        html += getResultHtml('spreader', currentMachine.name);
-        html += getResultHtml('discs height', '');
-        html += getResultHtml('pto speed', '');
+        html += getResultHtml('Spreader', currentMachine.name, true);
+        html += getResultHtml('Spreader', currentMachine.name);
+        html += getResultHtml('Discs height', '');
+        html += getResultHtml('Pto speed', '');
 
-        html += `<div class="result-separator"></div>`;
-        html += getResultHtml('family', currentConcime.type);
-        html += getResultHtml('product', currentConcime.name);
-        html += getResultHtml('form', currentConcime.shape);
-        html += getResultHtml('weight', currentConcime.weight);
+        html += getResultHtml('Concime', currentMachine.name, true);
+        html += getResultHtml('Family', currentConcime.type);
+        html += getResultHtml('Product', currentConcime.name);
+        html += getResultHtml('Form', currentConcime.shape);
+        html += getResultHtml('Weight', currentConcime.weight);
 
-        html += `<div class="result-separator"></div>`;
-        html += getResultHtml('working width', app.currentWorkingWidth);
-        html += getResultHtml('speed', app.currentWorkingSpeed);
-        html += getResultHtml('quantity', app.currentWorkingQuantity);
-        $resultList.innerHTML = html;
+        html += getResultHtml('Working parameters', currentMachine.name, true);
+        html += getResultHtml('Working width', app.currentWorkingWidth);
+        html += getResultHtml('Speed', app.currentWorkingSpeed);
+        html += getResultHtml('Quantity', app.currentWorkingQuantity);
+        $resultList.innerHTML = '<div class="property-list">' + html + '</div>';
 
         $main.innerHTML = app.getStepHtml('result');
         $main.append($html);

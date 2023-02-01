@@ -40,6 +40,10 @@ let LANG_DATA = {
     "step-concime" : "concime",
     "step-params" : "params",
 
+    "step-description-machine" : "Set your spreader",
+    "step-description-concime" : "Set the product",
+    "step-description-params" : "Set working parameters",
+
     "welcome-to" : "Willkommen zu",
     "device-synchronisation-in-progress" : "Gerätesynchronisierung wird ausgeführt",
     "please-wait" : "WARTEN SIE MAL",
