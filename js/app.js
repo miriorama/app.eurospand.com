@@ -317,7 +317,7 @@ var APP = (function(){
                 <div class="step-number">1</div>
                 <div class="step-title">${LANG.get('step-machine')}</div>
                 <div class="step-img">
-                    <img src="/img/icons/funnel${('machine' === step ? '-white' : '')}.svg" />
+                    <img src="img/icons/funnel${('machine' === step ? '-white' : '')}.svg" />
                 </div>
                 <div class="step-subtitle">Set your spreader</div>
             </button>
@@ -325,7 +325,7 @@ var APP = (function(){
                 <div class="step-number">2</div>
                 <div class="step-title">${LANG.get('step-concime')}</div>
                 <div class="step-img">
-                    <img src="/img/icons/flower${('concime' === step ? '-white' : '')}.svg" />
+                    <img src="img/icons/flower${('concime' === step ? '-white' : '')}.svg" />
                 </div>
                 <div class="step-subtitle">Set the product</div>
             </button>
@@ -333,7 +333,7 @@ var APP = (function(){
                 <div class="step-number">3</div>
                 <div class="step-title">${LANG.get('step-params')}</div>
                 <div class="step-img">
-                    <img src="/img/icons/slider${('params' === step ? '-white' : '')}.svg" />
+                    <img src="img/icons/slider${('params' === step ? '-white' : '')}.svg" />
                 </div>
                 <div class="step-subtitle">Set working parameters</div>
             </button>
@@ -341,7 +341,7 @@ var APP = (function(){
                 <div class="step-number">4</div>
                 <div class="step-title">RESULT</div>
                 <div class="step-img">
-                    <img src="/img/icons/list-result${('result' === step ? '-white' : '')}.svg" />
+                    <img src="img/icons/list-result${('result' === step ? '-white' : '')}.svg" />
                 </div>
                 <div class="step-subtitle">Result</div>
             </button>
@@ -399,19 +399,19 @@ var APP = (function(){
 
             html += `<button class="machine" onclick="APP.setMachine('${machineId}');">
                 <div class="machine-img">
-                    <img src="/img/machine/${machineId}.jpg" alt="${machine.name}" />
+                    <img src="img/machine/${machineId}.jpg" alt="${machine.name}" />
                 </div>
                 <div class="machine-footer">
 
                     <div class="machine-info" onclick="event.stopPropagation();APP.showMachine('${machineId}');">
-                        <img src="/img/icons/info-white.svg" />
+                        <img src="img/icons/info-white.svg" />
                     </div>
                         <div class="machine-title">
                             <div>
                             ${machine.name}
                             <small>${machine.subtitle}</small>
                             </div>
-                        <img src="/img/icons/chevron-right-white.svg" />
+                        <img src="img/icons/chevron-right-white.svg" />
                     </div>
                 </div>
             </button>`;
@@ -458,10 +458,10 @@ var APP = (function(){
 
         let html = `<div class="machine-detail">
             <button class="machine-close" onclick="APP.hideMachine();">
-                <img src="/img/icons/close.svg" alt="">
+                <img src="img/icons/close.svg" alt="">
             </button>
             <div class="machine-img">
-                <img src="/img/machine/${params.id}.jpg" alt="${machine.name}" />
+                <img src="img/machine/${params.id}.jpg" alt="${machine.name}" />
             </div>
             <div class="machine-title">
                 ${machine.name}
@@ -493,12 +493,12 @@ var APP = (function(){
                 <small>${machine.subtitle}</small>
 
                 <button class="machine-close" onclick="APP.hideMachine();">
-                    <img src="/img/icons/close-white.svg" alt="">
+                    <img src="img/icons/close-white.svg" alt="">
                 </button>
             </div>
             <div class="machine-scroll">
                 <div class="machine-img">
-                    <img src="/img/machine/${machineId}.jpg" alt="${machine.name}" />
+                    <img src="img/machine/${machineId}.jpg" alt="${machine.name}" />
                     <div class="machine-subtitle">
                         ${langMachine.subtitle}
                     </div>
@@ -549,7 +549,7 @@ var APP = (function(){
             let concimeTypeName = UTIL.capitalizeFirstLetter(concimeType);
             html += `<button class="concime-type" onclick="APP.setConcimeType(this, '${concimeType}');">
                 <div class="concime-type-img">
-                    <img src="/img/concime-type/${concimeType}.jpg" alt="${concimeTypeName}" />
+                    <img src="img/concime-type/${concimeType}.jpg" alt="${concimeTypeName}" />
                 </div>
                 ${concimeTypeName}
             </button>`;
@@ -562,15 +562,15 @@ var APP = (function(){
 
             html += `<button class="concime" data-concime-type="${concime.type}" onclick="APP.setConcime('${concimeId}');">
                 <div class="concime-img">
-                    <img src="/img/concime/${concimeId}.png" alt="${concime.name}" />
+                    <img src="img/concime/${concimeId}.png" alt="${concime.name}" />
                 </div>
                 <div class="concime-footer">
                     <div class="concime-info" onclick="event.stopPropagation();APP.showConcime('${concimeId}');">
-                        <img src="/img/icons/info-white.svg" />
+                        <img src="img/icons/info-white.svg" />
                     </div>
                     <div class="concime-title">
                         <div>${concime.name}</div>
-                        <img src="/img/icons/chevron-right-white.svg" />
+                        <img src="img/icons/chevron-right-white.svg" />
                     </div>
                 </div>
             </button>`;
@@ -668,12 +668,12 @@ var APP = (function(){
                 <small>${concime.type}</small>
 
                 <button class="concime-close" onclick="APP.hideConcime();">
-                    <img src="/img/icons/close-white.svg" alt="">
+                    <img src="img/icons/close-white.svg" alt="">
                 </button>
             </div>
             <div class="concime-scroll">
                 <div class="concime-img">
-                    <img src="/img/concime/${concimeId}.png" alt="${concime.name}" />
+                    <img src="img/concime/${concimeId}.png" alt="${concime.name}" />
                     <div class="concime-subtitle">
                         ${concime.name}
                     </div>
