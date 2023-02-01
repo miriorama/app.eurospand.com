@@ -28,8 +28,8 @@
             <img src="img/icons/close.svg" alt="">
         </button>
 
-        <button class="menu-saved"></button>
-        <button class="menu-lang"></button>
+        <button class="menu-saved" onclick="APP.menuClose();APP.changeContent('saved-works');"></button>
+        <button class="menu-lang" onclick="APP.menuClose();APP.changeContent('set-language');"></button>
         <button class="menu-unit"></button>
         <button class="menu-who"></button>
         <button class="menu-contact"></button>
@@ -192,6 +192,12 @@
             <button class="btn params-reset" onclick="APP.paramsReset();">reset</button>
             <button class="btn btn-important params-compute" onclick="APP.paramsCompute();">compute</button>
         </div>
+    </template>
+    <template data-section="saved-works">
+
+    </template>
+    <template data-section="set-language">
+
     </template>
 
     <script type="text/javascript" src="js/app.js?v=1"></script>

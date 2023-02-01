@@ -9,7 +9,7 @@
 
 */
 
-let LANG_DATA = {
+var LANG_DATA = {
 
     "menu-saved" : "Saved works",
     "menu-lang" : "Change language",

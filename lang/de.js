@@ -1,4 +1,4 @@
-let LANG_DATA = {
+var LANG_DATA = {
     "welcome-to" : "Willkommen zu",
     "device-synchronisation-in-progress" : "Gerätesynchronisierung wird ausgeführt",
     "please-wait" : "WARTEN SIE MAL",

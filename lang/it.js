@@ -14,7 +14,7 @@ bouchons - pelleted - pelletiert - peletizado
 
 */
 
-let LANG_DATA = {
+var LANG_DATA = {
 
     "menu-saved" : "saved",
     "menu-lang" : "lang",

@@ -11,6 +11,12 @@ var UTIL = (function () {
         return Math.round((num + Number.EPSILON) * 100) / 100;
     }
 
+    util.guid = function() {
+		return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+		  (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+		);
+	}
+
     return util;
 })();
 
@@ -18,17 +24,44 @@ var LANG = (function () {
     let lang = {
         data: null,
         _current: null,
-        keys: ['es','bu','de','en','fr','gr','hu','it','nl','pt','ro','ru','tr']
+        keys: ['es','bu','de','en','fr','gr','hu','it','nl','pt','ro','ru','tr'],
     };
+
+    const LOCAL_STORAGE_LANG = 'eurospandLang';
 
     lang.init = function(params) {
         let defaultParams = {
-            lang: 'en',
+            lang: null,
         };
         params = Object.assign({}, defaultParams, params);
 
+        // elimino eventuale script di lingua precedente
+        let $prevLang = document.querySelector('[data-lang]');
+        if($prevLang) {
+            $prevLang.remove();
+        }
+
+        // se ho una lingua salvata nel localstorage
+        if(!params.lang) {
+            let localLang = localStorage.getItem(LOCAL_STORAGE_LANG);
+            if(localLang) {
+                params.lang = localLang;
+            }
+        }
+
+        // altrimenti provo a prenderla dal browser
+        if(!params.lang) {
+            params.lang = LANG.detect();
+        }
+
+        // se proprio non becco nulla metto inglese
+        if(!params.lang) {
+            params.lang = 'en';
+        }
+
         let langPath = 'lang/' + params.lang + '.js';
         let script = document.createElement('script');
+        script.setAttribute('data-lang', params.lang);
         script.onload = function () {
             lang.data = LANG_DATA;
             APP.init();
@@ -38,6 +71,8 @@ var LANG = (function () {
 
         //lang.data = API(langPath);
         lang._current = params.lang;
+
+        localStorage.setItem(LOCAL_STORAGE_LANG, lang.current());
     }
 
     lang.current = function() {
@@ -46,6 +81,81 @@ var LANG = (function () {
 
     lang.get = function(key) {
         return lang.data[key];
+    }
+
+    lang.list = function() {
+        return [
+            {
+                id: 'bu',
+                name: 'bu'
+            },
+            {
+                id: 'de',
+                name: 'de'
+            },
+            {
+                id: 'en',
+                name: 'en'
+            },
+            {
+                id: 'es',
+                name: 'es'
+            },
+            {
+                id: 'fr',
+                name: 'fr'
+            },
+            {
+                id: 'gr',
+                name: 'gr'
+            },
+            {
+                id: 'hu',
+                name: 'hu'
+            },
+            {
+                id: 'it',
+                name: 'it'
+            },
+            {
+                id: 'nl',
+                name: 'nl'
+            },
+            {
+                id: 'pt',
+                name: 'pt'
+            },
+            {
+                id: 'ro',
+                name: 'ro'
+            },
+            {
+                id: 'ru',
+                name: 'ru'
+            },
+            {
+                id: 'tr',
+                name: 'tr'
+            }
+        ];
+    }
+
+    lang.change = function(id) {
+        lang.init({
+            lang: id
+        });
+    }
+
+    lang.detect = function() {
+        let ret = null;
+
+        try {
+            ret = navigator.language.substring(0, 2);
+        } catch (error) {
+            ret = null;
+        }
+
+        return ret;
     }
 
     return lang;
@@ -120,6 +230,8 @@ var APP = (function(){
         concimeTypeList: ['fertilizzanti', 'semi', 'lumachicida']
     }
 
+    const LOCAL_STORAGE_SAVED_WORKS = 'eurospandSavedWorks';
+
     let $body, $main, $menu, $mainTitle, $mainSubtitle;
 
     app.init = function() {
@@ -166,6 +278,14 @@ var APP = (function(){
             {   regex: '^flow-factor/?$',
                 template: 'flow-factor',
                 callback: app.initFlowFactor
+            },
+            {   regex: '^saved-works/?$',
+                template: 'saved-works',
+                callback: app.initSavedWorks
+            },
+            {   regex: '^set-language/?$',
+                template: 'set-language',
+                callback: app.initSetLanguage
             }
         ];
 
@@ -290,6 +410,27 @@ var APP = (function(){
     app.menuClose = function() {
         $menu.classList.remove('is-visible');
         $body.classList.remove('is-overflow');
+    }
+
+    app.initSetLanguage = function() {
+        let html = '';
+        let $div = document.createElement('div');
+
+        let savedWorks = app.getSavedWorks();
+        for (const lang of LANG.list()) {
+            html += `
+                <div class="lang">
+                    <div class="lang-title" onclick="LANG.change('${lang.id}');">
+                        <div class="lang-flag"><img src="img/lang/flag-${lang.id}.png" /></div>
+                        <div class="lang-title">${lang.name}</div>
+                    </div>
+                </div>`;
+        }
+        html = `<div class="lang-list">${html}</div>`
+
+        $div.innerHTML = html;
+
+        return $div;
     }
 
     // STEP
@@ -768,12 +909,12 @@ var APP = (function(){
             let param = params[paramId];
             let current = param.current || param.min;
 
-            html += `<div class="parameter parameter-${paramId}">
+            html += `<div class="parameter parameter-${paramId}" data-id="${paramId}">
                 <div class="parameter-title">${UTIL.capitalizeFirstLetter(paramId)}</div>
                 ${(paramId === 'width' ? optionalHtml : '')}
                 <div class="parameter-input">
                     <div class="parameter-text">
-                        <input id="widthText" type="text" value="${current}">
+                        <input id="widthText" type="text" value="${current}" onchange="APP.refreshCurrentParams(this);">
                     </div>
                     <div class="parameter-slider">
                         <div class="parameter-max">${param.max} ${param.unit}</div>
@@ -808,8 +949,12 @@ var APP = (function(){
         return null;
     }
     app.refreshCheckLabel = function($el) {
-        let $textInput = $el.closest('.parameter').querySelector('.parameter-text input');
-        console.log($el.value);
+        let $parameter = $el.closest('.parameter');
+        let $textInput = $parameter.querySelector('.parameter-text input');
+
+        let paramName = UTIL.capitalizeFirstLetter($parameter.getAttribute('data-id'));
+        app['currentWorking' + paramName] = $el.value;
+
         $textInput.value = $el.value;
     }
     app.refreshMaxWorkingWidth = function() {
@@ -828,10 +973,16 @@ var APP = (function(){
     app.paramsReset = function() {
 
     }
+    app.refreshCurrentParams = function($el) {
+        let $parameter = $el.closest('.parameter');
+        let paramName = UTIL.capitalizeFirstLetter($parameter.getAttribute('data-id'));
+
+        app['currentWorking' + paramName] = $el.value;
+    }
     app.paramsCompute = function() {
-        app.currentWorkingWidth = document.querySelector('.parameter-width .parameter-slider input').value;
-        app.currentWorkingSpeed = document.querySelector('.parameter-speed .parameter-slider input').value;
-        app.currentWorkingQuantity = document.querySelector('.parameter-quantity .parameter-slider input').value;
+        //app.currentWorkingWidth = document.querySelector('.parameter-width .parameter-slider input').value;
+        //app.currentWorkingSpeed = document.querySelector('.parameter-speed .parameter-slider input').value;
+        //app.currentWorkingQuantity = document.querySelector('.parameter-quantity .parameter-slider input').value;
 
         app.changeContent('result');
     }
@@ -942,10 +1093,78 @@ var APP = (function(){
         return null;
     }
     app.saveResult = function() {
+        let obj = {
+            currentMachine: app.currentMachine,
+            currentConcime: app.currentConcime,
+            currentWorkingWidth: app.currentWorkingWidth,
+            currentWorkingSpeed: app.currentWorkingSpeed,
+            currentWorkingQuantity: app.currentWorkingQuantity,
+            date: new Date().toISOString(),
+            id: UTIL.guid()
+        }
 
+        let savedWorks = app.getSavedWorks();
+        savedWorks.unshift(obj);
+
+        localStorage.setItem(LOCAL_STORAGE_SAVED_WORKS, JSON.stringify(savedWorks));
+        app.changeContent('saved-works');
     }
-    app.getResultList = function() {
 
+
+    // SAVED WORKS
+    app.getSavedWorks = function() {
+        let savedWorks = JSON.parse(localStorage.getItem(LOCAL_STORAGE_SAVED_WORKS));
+        if(!Array.isArray(savedWorks)) {
+            savedWorks = [];
+        }
+
+        return savedWorks;
+    }
+    app.initSavedWorks = function() {
+        let html = '';
+        let $div = document.createElement('div');
+
+        let savedWorks = app.getSavedWorks();
+        for (const savedWork of savedWorks) {
+            let attr = encodeURIComponent(JSON.stringify(savedWork));
+            html += `
+                <div class="saved-work">
+                    <div class="saved-work-title" onclick="APP.loadSavedWork('${attr}');">${savedWork.date}</div>
+                    <div class="saved-work-subtitle">${savedWork.date}</div>
+                    <div class="saved-work-delete" onclick="APP.deleteSavedWork('${savedWork.id || 0}');">X</div>
+                </div>`;
+        }
+        html = `<div class="saved-work-list">${html}</div>`
+
+        $div.innerHTML = html;
+
+        return $div;
+    }
+    app.loadSavedWork = function(obj) {
+        obj = JSON.parse(decodeURIComponent(obj));
+        app.currentMachine = obj.currentMachine;
+        app.currentConcime = obj.currentConcime;
+        app.currentWorkingWidth = obj.currentWorkingWidth;
+        app.currentWorkingSpeed = obj.currentWorkingSpeed;
+        app.currentWorkingQuantity = obj.currentWorkingQuantity;
+
+        app.changeContent('result');
+    }
+    app.deleteSavedWork = function(id) {
+        let savedWorks = app.getSavedWorks();
+
+        let i = 0;
+        for (const savedWork of savedWorks) {
+            if(savedWork.id == id) {
+                savedWorks.splice(i, 1);
+                break;
+            }
+            i++;
+        }
+
+        localStorage.setItem(LOCAL_STORAGE_SAVED_WORKS, JSON.stringify(savedWorks));
+
+        location.reload();
     }
 
     // FLOW FACTOR
