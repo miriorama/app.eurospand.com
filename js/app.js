@@ -27,7 +27,7 @@ var LANG = (function () {
         };
         params = Object.assign({}, defaultParams, params);
 
-        let langPath = '/lang/' + params.lang + '.js';
+        let langPath = 'lang/' + params.lang + '.js';
         let script = document.createElement('script');
         script.onload = function () {
             lang.data = LANG_DATA;
