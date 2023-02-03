@@ -141,6 +141,8 @@ var LANG = (function () {
     }
 
     lang.change = function(id) {
+        return false;
+
         lang.init({
             lang: id
         });
