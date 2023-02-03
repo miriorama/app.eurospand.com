@@ -372,6 +372,8 @@ var APP = (function(){
                 break;
             }
         }
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     }
     app.changeContent = function(content) {
         location.hash = content;
