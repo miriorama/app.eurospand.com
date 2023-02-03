@@ -412,27 +412,6 @@ var APP = (function(){
         $body.classList.remove('is-overflow');
     }
 
-    app.initSetLanguage = function() {
-        let html = '';
-        let $div = document.createElement('div');
-
-        let savedWorks = app.getSavedWorks();
-        for (const lang of LANG.list()) {
-            html += `
-                <div class="lang">
-                    <div class="lang-title" onclick="LANG.change('${lang.id}');">
-                        <div class="lang-flag"><img src="img/lang/flag-${lang.id}.png" /></div>
-                        <div class="lang-title">${lang.name}</div>
-                    </div>
-                </div>`;
-        }
-        html = `<div class="lang-list">${html}</div>`
-
-        $div.innerHTML = html;
-
-        return $div;
-    }
-
     // STEP
     app.getStepHtml = function(step) {
         let $html = document.createElement('div');
@@ -458,7 +437,7 @@ var APP = (function(){
                 <div class="step-number">1</div>
                 <div class="step-title">${LANG.get('step-machine')}</div>
                 <div class="step-img">
-                    <img src="img/icons/funnel${('machine' === step ? '-white' : '')}.svg" />
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-funnel" viewBox="0 0 16 16"><path d="M1.5 1.5A.5.5 0 0 1 2 1h12a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.128.334L10 8.692V13.5a.5.5 0 0 1-.342.474l-3 1A.5.5 0 0 1 6 14.5V8.692L1.628 3.834A.5.5 0 0 1 1.5 3.5v-2zm1 .5v1.308l4.372 4.858A.5.5 0 0 1 7 8.5v5.306l2-.666V8.5a.5.5 0 0 1 .128-.334L13.5 3.308V2h-11z"/></svg>
                 </div>
                 <div class="step-subtitle">Set your spreader</div>
             </button>
@@ -466,7 +445,7 @@ var APP = (function(){
                 <div class="step-number">2</div>
                 <div class="step-title">${LANG.get('step-concime')}</div>
                 <div class="step-img">
-                    <img src="img/icons/flower${('concime' === step ? '-white' : '')}.svg" />
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-flower2" viewBox="0 0 16 16"><path d="M8 16a4 4 0 0 0 4-4 4 4 0 0 0 0-8 4 4 0 0 0-8 0 4 4 0 1 0 0 8 4 4 0 0 0 4 4zm3-12c0 .073-.01.155-.03.247-.544.241-1.091.638-1.598 1.084A2.987 2.987 0 0 0 8 5c-.494 0-.96.12-1.372.331-.507-.446-1.054-.843-1.597-1.084A1.117 1.117 0 0 1 5 4a3 3 0 0 1 6 0zm-.812 6.052A2.99 2.99 0 0 0 11 8a2.99 2.99 0 0 0-.812-2.052c.215-.18.432-.346.647-.487C11.34 5.131 11.732 5 12 5a3 3 0 1 1 0 6c-.268 0-.66-.13-1.165-.461a6.833 6.833 0 0 1-.647-.487zm-3.56.617a3.001 3.001 0 0 0 2.744 0c.507.446 1.054.842 1.598 1.084.02.091.03.174.03.247a3 3 0 1 1-6 0c0-.073.01-.155.03-.247.544-.242 1.091-.638 1.598-1.084zm-.816-4.721A2.99 2.99 0 0 0 5 8c0 .794.308 1.516.812 2.052a6.83 6.83 0 0 1-.647.487C4.66 10.869 4.268 11 4 11a3 3 0 0 1 0-6c.268 0 .66.13 1.165.461.215.141.432.306.647.487zM8 9a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/></svg>
                 </div>
                 <div class="step-subtitle">Set the product</div>
             </button>
@@ -474,7 +453,7 @@ var APP = (function(){
                 <div class="step-number">3</div>
                 <div class="step-title">${LANG.get('step-params')}</div>
                 <div class="step-img">
-                    <img src="img/icons/slider${('params' === step ? '-white' : '')}.svg" />
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-sliders" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M11.5 2a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM9.05 3a2.5 2.5 0 0 1 4.9 0H16v1h-2.05a2.5 2.5 0 0 1-4.9 0H0V3h9.05zM4.5 7a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM2.05 8a2.5 2.5 0 0 1 4.9 0H16v1H6.95a2.5 2.5 0 0 1-4.9 0H0V8h2.05zm9.45 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm-2.45 1a2.5 2.5 0 0 1 4.9 0H16v1h-2.05a2.5 2.5 0 0 1-4.9 0H0v-1h9.05z"/></svg>
                 </div>
                 <div class="step-subtitle">Set working parameters</div>
             </button>
@@ -482,7 +461,7 @@ var APP = (function(){
                 <div class="step-number">4</div>
                 <div class="step-title">RESULT</div>
                 <div class="step-img">
-                    <img src="img/icons/list-result${('result' === step ? '-white' : '')}.svg" />
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-list-check" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zM3.854 2.146a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 1 1 .708-.708L2 3.293l1.146-1.147a.5.5 0 0 1 .708 0zm0 4a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 1 1 .708-.708L2 7.293l1.146-1.147a.5.5 0 0 1 .708 0zm0 4a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 0 1 .708-.708l.146.147 1.146-1.147a.5.5 0 0 1 .708 0z"/></svg>
                 </div>
                 <div class="step-subtitle">Result</div>
             </button>
@@ -944,6 +923,10 @@ var APP = (function(){
         $html.innerHTML = html;
         $main.append($html);
 
+        app.currentWorkingWidth = document.querySelector('.parameter-width .parameter-slider input').value;
+        app.currentWorkingSpeed = document.querySelector('.parameter-speed .parameter-slider input').value;
+        app.currentWorkingQuantity = document.querySelector('.parameter-quantity .parameter-slider input').value;
+
         app.setTitle('Calculate opening', LANG.get('step-description-params'));
 
         return null;
@@ -1027,6 +1010,7 @@ var APP = (function(){
         }
     }
 
+
     // RESULT
     app.initResult = function($html) {
         if(!app.currentMachine) {
@@ -1089,6 +1073,8 @@ var APP = (function(){
 
         $main.innerHTML = app.getStepHtml('result');
         $main.append($html);
+
+        app.setTitle('Calculate opening', LANG.get('step-description-result'));
 
         return null;
     }
@@ -1167,6 +1153,7 @@ var APP = (function(){
         location.reload();
     }
 
+
     // FLOW FACTOR
     app.getFlowStepHtml = function(step) {
         let html = '';
@@ -1199,6 +1186,27 @@ var APP = (function(){
 
         return null;
     }
+
+
+    // LANG
+    app.initSetLanguage = function() {
+        let html = '';
+        let $div = document.createElement('div');
+
+        for (const lang of LANG.list()) {
+            html += `
+                    <div class="lang" onclick="LANG.change('${lang.id}');APP.changeContent('')">
+                        <div class="lang-flag"><img src="img/lang/flag-${lang.id}.png" /></div>
+                        <div class="lang-title">${lang.name}</div>
+                    </div>`;
+        }
+        html = `<div class="lang-list">${html}</div>`
+
+        $div.innerHTML = html;
+
+        return $div;
+    }
+
 
     return app;
 })();

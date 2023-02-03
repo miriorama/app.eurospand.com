@@ -43,6 +43,7 @@ var LANG_DATA = {
     "step-description-machine" : "Set your spreader",
     "step-description-concime" : "Set the product",
     "step-description-params" : "Set working parameters",
+    "step-description-result" : "Result",
 
     "welcome-to" : "Willkommen zu",
     "device-synchronisation-in-progress" : "Gerätesynchronisierung wird ausgeführt",
@@ -93,58 +94,68 @@ var LANG_DATA = {
     "contacts" : "Kontakte",
     "credits" : "Kredite",
     "saved-works" : "Gespeicherte Werke",
-    "no-combination-found" : "Keine Kombination gefunden!"
-}
+    "no-combination-found" : "Keine Kombination gefunden!",
 
-let LANG_MACHINE_DATA = {
     "david-compact": {
-        name: "",
-        subtitle: "Spandiconcime professionale centrifugo doppio disco",
-        desc: ""
+        title: "DAVID/COMPACT ",
+        subtitle: "Professional centrifugal double disc fertilizer spreader ",
+        shortDescription: "Ideal for the distribution of mineral, powdered fertilizers and organic amenders and for the broadcast of various seeds.",
+        description: "Hopper capacity: 600 – 800 – 1000 litres <br>Working width: up to 15 metres (up to 18 metres with the application of the kit of vanes) *<br>Opening/closing controls for alimentation of discs by means of hydraulic system with single or double spool valves<br>Electronic system for distribution handling proportional to the forward speed with adjustment of the quantities by means of two linear actuators (DAVID ELT version) <br>Vibro system: vibrating hopper bottom, without inner agitators<br>TPS – Transmission Protection System <br>I and II category hook with two hitching positions<br>* with granular-mineral fertilizers with density equal to or greater than 1kg/dm3",
+
     },
     "david-compact-fruit": {
-        name: "",
-        subtitle: "",
-        desc: ""
+        title: "DAVID/COMPACT FRUIT ",
+        subtitle: "Professional Centrifugal double disc fertilizer spreader for the inter-row and full-field distribution ",
+        shortDescription: "Ideal for the distribution of mineral, powdered fertilizers and organic amenders and for the broadcast of various seeds.",
+        description: "Hopper capacity: 600 – 800 – 1000 litres <br>A stainless-steel module conveyor enables these models to carry out the following operations easily and fast:<br>– localized at the root of vineyards or orchards with rows of plants from 2 to 5 m<br>– full field with spreading width up to 12 m *<br>The application of two rear independent l/r shutters enables distribution:<br>– full field distribution with right or left border spreading reduction<br>– localized in a large band at the centre of the row<br>– in green houses<br>Opening/closing controls for alimentation of discs by means of hydraulic system with single or double spool valves<br>Electronic system for the distribution handling proportional to the forward speed with adjustment of the quantities by means of two linear actuators (COMPACT FRUIT ELT version)<br>Electronic controls and weighing system: exact distribution of the required quantity per hectare by means of constantly detection of the real weight from two load cells (COMPACT FRUIT ELT +W version)<br>Vibro system: vibrating hopper bottom, without inner agitators<br>TPS – Transmission Protection System <br>I and II category hook with two hitching positions<br><br>* with granular-mineral fertilizers with density equal to or greater than 1kg/dm3",
+
     },
     "apollo-galileo": {
-        name: "",
-        subtitle: "",
-        desc: ""
-    },
-    "jolly-zeus-18": {
-        name: "",
-        subtitle: "",
-        desc: ""
+        title: "APOLLO/GALILEO",
+        subtitle: "Professional centrifugal double disc fertilizer spreader ",
+        shortDescription: "Ideal for the distribution of mineral, powdered fertilizers and organic amenders and for the broadcast of various seeds.",
+        description: "Hopper capacity: 600 - 1100 - 1600 litres<br>Working width: up to 18 metres* <br>Opening/closing controls for alimentation of discs by means of hydraulic system with single or double spool valves<br>Electronic system: proportional distribution to the forward speed with adjustment of the quantities by means of two linear actuators (APOLLO ELT version) <br>Vibro system: vibrating hopper bottom, without inner agitators<br>TPS – Transmission Protection System <br>II category hook with two hitching positions<br>* with granular-mineral fertilizers with density equal to or greater than 1kg/dm3",
     },
     "jolly-zeus-18-fruit": {
-        name: "",
-        subtitle: "",
-        desc: ""
+        title: "JOLLY/ZEUS 18 FRUIT",
+        subtitle: "Professional Centrifugal double disc fertilizer spreader for inter-row distribution ",
+        shortDescription: "Ideal for the distribution of mineral, powdered fertilizers and organic amenders and for the broadcast of various seeds.",
+        description: "Hopper capacity: 850 - 1450 - 1800 litres<br>A stainless-steel module conveyor enables these models to carry out the following operations easily and fast:<br>– localized at the root of vineyards or orchards with rows of plants from 5 to 10 m<br>– full field with spreading width up to 18 m. *<br>The application of two rear independent l/r shutters enables distribution:<br>– full field distribution with right or left border spreading reduction<br>– localized in a large band at the centre of the row<br><br>Opening/closing controls for alimentation of discs by means of hydraulic system with single or double spool valves<br>Electronic system for distribution handling proportional to the forward speed with adjustment of the quantities by means of two linear actuators (JOLLY FRUIT ELT version)<br>Electronic controls and weighing system: exact distribution of the required quantity per hectare by means of constantly detection of the real weight from two load cells (JOLLY FRUIT ELT +W version)<br><br>Vibro system: vibrating hopper bottom, without inner agitators<br>TPS – Transmission Protection System <br>II and III category hooks with two hitching positions<br><br>* with granular-mineral fertilizers with density equal to or greater than 1kg/dm3",
+    },
+    "jolly-zeus-18": {
+        title: "ZEUS 18-24-28-32",
+        subtitle: "Professional centrifugal double disc fertilizer spreader ",
+        shortDescription: "Ideal for the distribution of mineral, powdered fertilizers and organic amenders and for the broadcast of various seeds.",
+        description: "ZEUS 18: Hopper capacity: 850 – 1450 – 1800 litres <br>Working width: up to 18 metres (up to 24 metres with kit of vanes)*<br>ZEUS 24-28-32: Hopper capacity: 1400 – 2000 – 3000 litres <br>Working width up to 24, 28, 32 metres (according to the model)<br>Opening/closing controls for alimentation of discs by means of hydraulic system with single or double spool valves. <br>Electronic system for distribution handling proportional to the forward speed with adjustment of the quantities by means of two linear actuators (ZEUS 18 ELT version) <br>Electronic controls and weighing system: exact distribution of the required quantity per hectare by means of constantly detection of the real weight from two load cells (ZEUS 18 ELT +W version)<br>Vibro system: vibrating hopper bottom, without inner agitators<br>TPS – Transmission Protection System <br>II and III category hook with two hitching positions<br>* with granular-mineral fertilizers with density equal to or greater than 1kg/dm3",
     },
     "jolly-zeus-24": {
-        name: "",
-        subtitle: "",
-        desc: ""
+        title: "ZEUS 18-24-28-32",
+        subtitle: "Professional centrifugal double disc fertilizer spreader ",
+        shortDescription: "Ideal for the distribution of mineral, powdered fertilizers and organic amenders and for the broadcast of various seeds.",
+        description: "ZEUS 18: Hopper capacity: 850 – 1450 – 1800 litres <br>Working width: up to 18 metres (up to 24 metres with kit of vanes)*<br>ZEUS 24-28-32: Hopper capacity: 1400 – 2000 – 3000 litres <br>Working width up to 24, 28, 32 metres (according to the model)<br>Opening/closing controls for alimentation of discs by means of hydraulic system with single or double spool valves. <br>Electronic system for distribution handling proportional to the forward speed with adjustment of the quantities by means of two linear actuators (ZEUS 18 ELT version) <br>Electronic controls and weighing system: exact distribution of the required quantity per hectare by means of constantly detection of the real weight from two load cells (ZEUS 18 ELT +W version)<br>Vibro system: vibrating hopper bottom, without inner agitators<br>TPS – Transmission Protection System <br>II and III category hook with two hitching positions<br>* with granular-mineral fertilizers with density equal to or greater than 1kg/dm3",
     },
     "jolly-zeus-28": {
-        name: "",
-        subtitle: "",
-        desc: ""
+        title: "ZEUS 18-24-28-32",
+        subtitle: "Professional centrifugal double disc fertilizer spreader ",
+        shortDescription: "Ideal for the distribution of mineral, powdered fertilizers and organic amenders and for the broadcast of various seeds.",
+        description: "ZEUS 18: Hopper capacity: 850 – 1450 – 1800 litres <br>Working width: up to 18 metres (up to 24 metres with kit of vanes)*<br>ZEUS 24-28-32: Hopper capacity: 1400 – 2000 – 3000 litres <br>Working width up to 24, 28, 32 metres (according to the model)<br>Opening/closing controls for alimentation of discs by means of hydraulic system with single or double spool valves. <br>Electronic system for distribution handling proportional to the forward speed with adjustment of the quantities by means of two linear actuators (ZEUS 18 ELT version) <br>Electronic controls and weighing system: exact distribution of the required quantity per hectare by means of constantly detection of the real weight from two load cells (ZEUS 18 ELT +W version)<br>Vibro system: vibrating hopper bottom, without inner agitators<br>TPS – Transmission Protection System <br>II and III category hook with two hitching positions<br>* with granular-mineral fertilizers with density equal to or greater than 1kg/dm3",
     },
     "jolly-zeus-32": {
-        name: "",
-        subtitle: "",
-        desc: ""
+        title: "ZEUS 18-24-28-32",
+        subtitle: "Professional centrifugal double disc fertilizer spreader ",
+        shortDescription: "Ideal for the distribution of mineral, powdered fertilizers and organic amenders and for the broadcast of various seeds.",
+        description: "ZEUS 18: Hopper capacity: 850 – 1450 – 1800 litres <br>Working width: up to 18 metres (up to 24 metres with kit of vanes)*<br>ZEUS 24-28-32: Hopper capacity: 1400 – 2000 – 3000 litres <br>Working width up to 24, 28, 32 metres (according to the model)<br>Opening/closing controls for alimentation of discs by means of hydraulic system with single or double spool valves. <br>Electronic system for distribution handling proportional to the forward speed with adjustment of the quantities by means of two linear actuators (ZEUS 18 ELT version) <br>Electronic controls and weighing system: exact distribution of the required quantity per hectare by means of constantly detection of the real weight from two load cells (ZEUS 18 ELT +W version)<br>Vibro system: vibrating hopper bottom, without inner agitators<br>TPS – Transmission Protection System <br>II and III category hook with two hitching positions<br>* with granular-mineral fertilizers with density equal to or greater than 1kg/dm3",
     },
     "elettra-crono-24": {
-        name: "",
-        subtitle: "",
-        desc: ""
+        title: "ELETTRA/CRONO 24",
+        subtitle: "Professional Electronic centrifugal double disc fertilizer spreader ",
+        shortDescription: "Ideal for the distribution of mineral, powdered fertilizers and organic amenders and for the broadcast of various seeds.",
+        description: "Hopper capacity: 1400 - 2000 - 3000 litres<br>Working width: up to 24 metres *<br>Electronic system for distribution handling proportional to the forward speed with quantities adjustment by means of linear actuators. <br>Independent L/R hydraulic opening/closing control with double effect cylinders to open and close the dose shutters instantaneously in the case of failure of the electronic system<br>- Frame with payload up to 3600 kg  <br>- Integrated GPS speed detector  <br>- Versions with weighing system (+W) <br>Vibro system: vibrating hopper bottom, without inner agitators<br>TPS – Transmission Protection System <br>II and III category hook with two hitching positions<br>* with granular-mineral fertilizers with density equal to or greater than 1kg/dm3",
     },
     "elettra-crono-32": {
-        name: "",
-        subtitle: "",
-        desc: ""
-    },
+        title: "ELETTRA/CRONO 32",
+        subtitle: "Professional Electronic centrifugal double disc fertilizer spreader ",
+        shortDescription: "Ideal for the distribution of mineral, powdered fertilizers and organic amenders and for the broadcast of various seeds.",
+        description: "Hopper capacity: 1400 - 2000 - 3000 litres<br>Working width: up to 32 metres *<br>Electronic system for distribution handling proportional to the forward speed with quantities adjustment by means of linear actuators. <br>Independent L/R hydraulic opening/closing control with double effect cylinders to open and close the dose shutters instantaneously in the case of failure of the electronic system<br>- Frame with payload up to 3600 kg  <br>- Integrated GPS speed detector  <br>- Versions with weighing system (+W) <br>Vibro system: vibrating hopper bottom, without inner agitators<br>TPS – Transmission Protection System <br>II and III category hook with two hitching positions<br>* with granular-mineral fertilizers with density equal to or greater than 1kg/dm3",
+    }
 }
