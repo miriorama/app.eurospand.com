@@ -1598,6 +1598,7 @@ input[type=checkbox].switch{
 		margin-bottom: 16px;
 		position: relative;
 		overflow: hidden;
+		cursor: pointer;
 
 		.saved-work-text {
 			margin-right: 56px;
@@ -1635,6 +1636,13 @@ input[type=checkbox].switch{
 			img {
 				width: 20px;
 				transform: skewX(15deg);
+				transition: @transition;
+			}
+
+			&:hover {
+				img {
+					transform: skewX(15deg) scale(1.4);
+				}
 			}
 		}
 	}

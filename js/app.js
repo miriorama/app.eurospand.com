@@ -1350,9 +1350,9 @@ var APP = (function(){
             let concime = app.getConcime(savedWork.currentConcime);
 
             html += `
-                <div class="saved-work">
+                <div class="saved-work" onclick="APP.loadSavedWork('${attr}');">
                     <div class="saved-work-text">
-                        <div class="saved-work-title" onclick="APP.loadSavedWork('${attr}');">
+                        <div class="saved-work-title">
                             ${date} / ${machine.name} / ${concime.name}
                         </div>
                         <div class="saved-work-subtitle">
@@ -1362,7 +1362,7 @@ var APP = (function(){
                         </div>
                     </div>
                     <div class="saved-work-cta">
-                        <div class="saved-work-delete" onclick="APP.deleteSavedWork('${savedWork.id || 0}');">
+                        <div class="saved-work-delete" onclick="event.stopPropagation();APP.deleteSavedWork('${savedWork.id || 0}');">
                             <img src="img/icons/close-white.svg" />
                         </div>
                     </div>
