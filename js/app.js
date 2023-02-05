@@ -17,6 +17,22 @@ var UTIL = (function () {
 		);
 	}
 
+    util.formatDate = function(isoDate) {
+        let date = new Date(isoDate);
+        let year = date.getFullYear();
+        let month = date.getMonth()+1;
+        let day = date.getDate();
+
+        if (day < 10) {
+            day = '0' + day;
+        }
+        if (month < 10) {
+            month = '0' + month;
+        }
+
+        return `${year}-${month}-${day}`;
+    }
+
     return util;
 })();
 
@@ -64,6 +80,7 @@ var LANG = (function () {
         script.setAttribute('data-lang', params.lang);
         script.onload = function () {
             lang.data = LANG_DATA;
+            UNIT.init();
             APP.init();
         };
         script.src = langPath;
@@ -86,56 +103,56 @@ var LANG = (function () {
     lang.list = function() {
         return [
             {
-                id: 'bu',
-                name: 'bu'
+                id:'it',
+                name:'italiano'
             },
             {
-                id: 'de',
-                name: 'de'
+                id:'en',
+                name:'english'
             },
             {
-                id: 'en',
-                name: 'en'
+                id:'fr',
+                name:'Français'
             },
             {
-                id: 'es',
-                name: 'es'
+                id:'de',
+                name:'Deutsch'
             },
             {
-                id: 'fr',
-                name: 'fr'
+                id:'nl',
+                name:'Nederlands'
             },
             {
-                id: 'gr',
-                name: 'gr'
+                id:'es',
+                name:' español'
             },
             {
-                id: 'hu',
-                name: 'hu'
+                id:'ru',
+                name:'Pусский'
             },
             {
-                id: 'it',
-                name: 'it'
+                id:'gr',
+                name:'ελληνικά'
             },
             {
-                id: 'nl',
-                name: 'nl'
+                id:'pt',
+                name:'Português'
             },
             {
-                id: 'pt',
-                name: 'pt'
+                id:'ro',
+                name:'Română'
             },
             {
-                id: 'ro',
-                name: 'ro'
+                id:'tr',
+                name:'Türk'
             },
             {
-                id: 'ru',
-                name: 'ru'
+                id:'bu',
+                name:'български'
             },
             {
-                id: 'tr',
-                name: 'tr'
+                id:'hu',
+                name:'Magyar'
             }
         ];
     }
@@ -160,7 +177,228 @@ var LANG = (function () {
         return ret;
     }
 
+    lang.replace = function(obj) {
+        console.log(typeof obj);
+
+        let str = '';
+        if(typeof obj !== 'string') {
+            let renderer = document.createElement('div');
+            renderer.append(obj);
+            //renderer.innerHTML = obj;
+
+            str = renderer.innerHTML;
+            console.log(str);
+        }
+
+        str = String(str).replace(/\{(.*?)\}/g, function(match, token) {
+            return LANG.get(token);
+        });
+
+        return str;
+    }
+
     return lang;
+})();
+
+
+var UNIT = (function () {
+    let unit = {
+        data: null,
+        _current: null,
+
+        WIDTH: 'width',
+        SPEED: 'speed',
+        QUANTITY: 'quantity',
+        MASS_FLOW: 'massFlow'
+    };
+
+    const LOCAL_STORAGE_UNIT = 'eurospandUnit';
+
+    unit.init = function(params) {
+        let defaultParams = {
+            unit: null,
+        };
+        params = Object.assign({}, defaultParams, params);
+
+        // se ho una unità salvata nel localstorage
+        if(!params.unit) {
+            let localUnit = localStorage.getItem(LOCAL_STORAGE_UNIT);
+            if(localUnit) {
+                params.unit = localUnit;
+            }
+        }
+
+        // se proprio non becco nulla metto inglese
+        if(!params.unit) {
+            params.unit = 'm';
+        }
+
+        unit._current = unit.get(params.unit);
+
+        localStorage.setItem(LOCAL_STORAGE_UNIT, unit.current().id);
+    }
+
+    unit.current = function() {
+        return unit._current;
+    }
+
+    unit.get = function(id) {
+        for (const item of unit.list()) {
+            if(item.id == id) {
+                return item;
+            }
+        }
+
+        return null;
+    }
+
+    unit.list = function() {
+        return [
+        {
+                id:'m', //metrico
+                width: 'm',
+                speed: 'Km/h',
+                quantity: 'Kg/ha',
+                massFlow: 'Kg/min'
+            },
+            {
+                id:'b', // imperiale britannico
+                width: 'ft',
+                speed: 'mph',
+                quantity: 'lb/ac',
+                massFlow: 'lb/min',
+            },
+            {
+                id:'a', // imperiale americano
+                width: 'ft',
+                speed: 'mph',
+                quantity: 'lb/ac',
+                massFlow: 'lb/min',
+            }
+        ];
+    }
+
+    unit.change = function(id) {
+        unit.init({
+            unit: id
+        });
+    }
+
+
+    /*convertUnit= (value,toUnit)=>{
+
+
+        let ret;
+        switch (toUnit){
+            case 'inch':
+                ret = value / 0.0254;
+            break;
+            case 'feet':
+            ret = value * 3.281;
+            break;
+            case 'migl/h':
+                ret = value / 1.609;
+            break;
+            case 'lib/ac':
+                ret = value * 0.89;
+            break;
+            case 'lib/min':
+                ret = value * 2.205;
+            break;
+            case 'lib/gal_US': //from decimal
+                ret = value * 8.345;
+            break;
+            case 'lib/gal_UK': // from decicmal
+                ret = value * 10.022;
+            break;
+            case 'm':
+                ret = value /3.281;
+            break;
+            case 'km/h':
+                ret = value * 1.609;
+            break;
+            case 'kg/ha':
+                ret = value * 1.121;
+            break;
+            case 'libgalUK_fromUS':
+                ret = value * 1.201;
+            break;
+            case 'libgalUS_fromUK':
+                ret = value * 0.832;
+            break;
+            case 'kg/ha_fromUS':
+                ret = value * 0.119;
+                break;
+            case 'kg/ha_fromUK':
+                ret = value * 0.099;
+            break;
+            case 'galUsa_toL':
+            ret = value * 3.785;
+            break;
+            case 'galUk_toL':
+                ret = value * 4.546;
+            break;
+            case 'kg':
+            ret = value / 2.2046;
+            break;
+            case 'lb':
+            ret = value * 2.2046;
+            break;
+
+
+        }
+
+        return ret.toFixed(2);
+
+    }*/
+
+    const UNITS = {
+        'width': 3.281,
+        'speed': 0.621,
+        'quantity': 0.892,
+        'massFlow': 2.205
+    }
+
+    unit.convert = function(value, grandezza, addLabel = false) {
+        let ret;
+
+        if(unit.current().id == 'm') {
+            return value;
+        }
+
+        /*switch(grandezza){
+            case 'width':
+            ret = value * 3.281;
+            break;
+            case 'speed':
+                ret = value * 0.621;
+            break;
+            case 'quantity':
+                ret = value * 0.892;
+            break;
+        }*/
+        ret = value * UNITS[grandezza];
+        ret = ret.toFixed(2);
+
+        if(addLabel) {
+            ret += ' ' + UNIT.current()[grandezza];
+        }
+
+        return ret;
+    }
+    unit.unconvert = function(value, grandezza) {
+        let ret;
+
+        if(unit.current().id == 'm') {
+            return value;
+        }
+
+        ret = value / UNITS[grandezza];
+
+        return ret.toFixed(2);
+    }
+
+    return unit;
 })();
 
 var API = (function () {
@@ -234,14 +472,15 @@ var APP = (function(){
 
     const LOCAL_STORAGE_SAVED_WORKS = 'eurospandSavedWorks';
 
-    let $body, $main, $menu, $mainTitle, $mainSubtitle;
+    let $body, $main, $menu, $title, $mainTitle, $mainSubtitle;
 
     app.init = function() {
         $body = document.querySelector('body');
         $main = document.querySelector('.main');
         $menu = document.querySelector('.menu');
-        $mainTitle = document.querySelector('.title .red');
-        $mainSubtitle = document.querySelector('.title .gray');
+        $title = document.querySelector('.title');
+        $mainTitle = $title.querySelector('.title .red');
+        $mainSubtitle = $title.querySelector('.title .gray');
 
         if(app.debug) {
             app.currentMachine = 'david-compact';
@@ -288,6 +527,10 @@ var APP = (function(){
             {   regex: '^set-language/?$',
                 template: 'set-language',
                 callback: app.initSetLanguage
+            },
+            {   regex: '^set-unit/?$',
+                template: 'set-unit',
+                callback: app.initSetUnit
             }
         ];
 
@@ -378,19 +621,31 @@ var APP = (function(){
     app.changeContent = function(content) {
         location.hash = content;
     }
+    app.back = function(content) {
+        history.back();
+    }
+
+    // INDEX
     app.initIndex = function($html) {
-        $main.innerHTML = '';
-        $main.append($html);
+        $main.innerHTML = LANG.replace($html);
+
+        app.setTitle();
 
         return null;
     }
-    app.setTitle = function(title, subtitle) {
+    app.setTitle = function(title = null, subtitle = null) {
         if($mainTitle) {
-            $mainTitle.innerHTML = title;
+            $mainTitle.innerHTML = title || '';
         }
 
-        if($mainSubtitle && subtitle) {
-            $mainSubtitle.innerHTML = subtitle;
+        if($mainSubtitle) {
+            $mainSubtitle.innerHTML = subtitle || '';
+        }
+
+        if(!title && !subtitle) {
+            $title.classList.add('is-hidden');
+        } else {
+            $title.classList.remove('is-hidden');
         }
     }
 
@@ -421,37 +676,22 @@ var APP = (function(){
         let $html = document.createElement('div');
         $html.classList.add('step-list');
 
-        let cssClass = 'is-selected';
-
-
-        let title = "Calculate opening";
-        let subtitle = LANG.get('step-description-' + step);
-        let html = `<div class="title">
-            <div class="red">
-                <span>${title}</span>
-            </div>
-
-            <div class="gray" onclick="APP.hideConcime();">
-                ${subtitle}
-            </div>
-        </div>`;
-
-        html += `<div class="step-list">
+        let html = `<div class="step-list">
             <button class="step" data-step="machine" onclick="APP.changeContent('set-machine');">
                 <div class="step-number">1</div>
                 <div class="step-title">${LANG.get('step-machine')}</div>
                 <div class="step-img">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-funnel" viewBox="0 0 16 16"><path d="M1.5 1.5A.5.5 0 0 1 2 1h12a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.128.334L10 8.692V13.5a.5.5 0 0 1-.342.474l-3 1A.5.5 0 0 1 6 14.5V8.692L1.628 3.834A.5.5 0 0 1 1.5 3.5v-2zm1 .5v1.308l4.372 4.858A.5.5 0 0 1 7 8.5v5.306l2-.666V8.5a.5.5 0 0 1 .128-.334L13.5 3.308V2h-11z"/></svg>
                 </div>
-                <div class="step-subtitle">Set your spreader</div>
+                <div class="step-subtitle">${LANG.get('step-machine')}</div>
             </button>
             <button class="step" data-step="concime" onclick="APP.changeContent('set-concime');">
                 <div class="step-number">2</div>
-                <div class="step-title">${LANG.get('step-concime')}</div>
+                <div class="step-title">${LANG.get('step-product')}</div>
                 <div class="step-img">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-flower2" viewBox="0 0 16 16"><path d="M8 16a4 4 0 0 0 4-4 4 4 0 0 0 0-8 4 4 0 0 0-8 0 4 4 0 1 0 0 8 4 4 0 0 0 4 4zm3-12c0 .073-.01.155-.03.247-.544.241-1.091.638-1.598 1.084A2.987 2.987 0 0 0 8 5c-.494 0-.96.12-1.372.331-.507-.446-1.054-.843-1.597-1.084A1.117 1.117 0 0 1 5 4a3 3 0 0 1 6 0zm-.812 6.052A2.99 2.99 0 0 0 11 8a2.99 2.99 0 0 0-.812-2.052c.215-.18.432-.346.647-.487C11.34 5.131 11.732 5 12 5a3 3 0 1 1 0 6c-.268 0-.66-.13-1.165-.461a6.833 6.833 0 0 1-.647-.487zm-3.56.617a3.001 3.001 0 0 0 2.744 0c.507.446 1.054.842 1.598 1.084.02.091.03.174.03.247a3 3 0 1 1-6 0c0-.073.01-.155.03-.247.544-.242 1.091-.638 1.598-1.084zm-.816-4.721A2.99 2.99 0 0 0 5 8c0 .794.308 1.516.812 2.052a6.83 6.83 0 0 1-.647.487C4.66 10.869 4.268 11 4 11a3 3 0 0 1 0-6c.268 0 .66.13 1.165.461.215.141.432.306.647.487zM8 9a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/></svg>
                 </div>
-                <div class="step-subtitle">Set the product</div>
+                <div class="step-subtitle">${LANG.get('step-product')}</div>
             </button>
             <button class="step" data-step="params" onclick="APP.changeContent('set-params');">
                 <div class="step-number">3</div>
@@ -459,15 +699,15 @@ var APP = (function(){
                 <div class="step-img">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-sliders" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M11.5 2a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM9.05 3a2.5 2.5 0 0 1 4.9 0H16v1h-2.05a2.5 2.5 0 0 1-4.9 0H0V3h9.05zM4.5 7a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM2.05 8a2.5 2.5 0 0 1 4.9 0H16v1H6.95a2.5 2.5 0 0 1-4.9 0H0V8h2.05zm9.45 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm-2.45 1a2.5 2.5 0 0 1 4.9 0H16v1h-2.05a2.5 2.5 0 0 1-4.9 0H0v-1h9.05z"/></svg>
                 </div>
-                <div class="step-subtitle">Set working parameters</div>
+                <div class="step-subtitle">${LANG.get('step-params')}</div>
             </button>
             <button class="step" data-step="result" onclick="APP.changeContent('result');">
                 <div class="step-number">4</div>
-                <div class="step-title">RESULT</div>
+                <div class="step-title">${LANG.get('step-result')}</div>
                 <div class="step-img">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-list-check" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zM3.854 2.146a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 1 1 .708-.708L2 3.293l1.146-1.147a.5.5 0 0 1 .708 0zm0 4a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 1 1 .708-.708L2 7.293l1.146-1.147a.5.5 0 0 1 .708 0zm0 4a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 0 1 .708-.708l.146.147 1.146-1.147a.5.5 0 0 1 .708 0z"/></svg>
                 </div>
-                <div class="step-subtitle">Result</div>
+                <div class="step-subtitle">${LANG.get('step-result')}</div>
             </button>
         </div>`;
         $html.innerHTML = html;
@@ -541,7 +781,7 @@ var APP = (function(){
             </button>`;
         }
 
-        app.setTitle('Calculate opening', LANG.get('step-description-machine'));
+        app.setTitle(LANG.get('opening-calculate'), LANG.get('step-machine'));
 
         $machineList.innerHTML = html;
         $main.innerHTML = app.getStepHtml('machine');
@@ -704,7 +944,7 @@ var APP = (function(){
         $main.innerHTML = app.getStepHtml('concime');
         $main.append($html);
 
-        app.setTitle('Calculate opening', LANG.get('step-description-concime'));
+        app.setTitle(LANG.get('opening-calculate'), LANG.get('step-product'));
 
         return null;
     }
@@ -845,44 +1085,39 @@ var APP = (function(){
         }
         let currentMachine = app.getMachine(app.currentMachine);
 
-        let optionalTemplate = `<div class="optional-width" hidden>
-            <input class="optional-width-checkbox switch" id="optionalWidth" name="optionalWidth" type="checkbox" onchange="APP.refreshMaxWorkingWidth();">
-            <label class="optional-width-label" for="optionalWidth"></label>
-        </div>`;
         let optionalHtml = '';
-        //let $optionalWidth = $html.querySelector('.optional-width');
         if(currentMachine.widthOpt) {
             optionalHtml = `<div class="optional-width">
                 <input class="optional-width-checkbox switch" id="optionalWidth" name="optionalWidth" type="checkbox" onchange="APP.refreshMaxWorkingWidth();">
-                <label class="optional-width-label" for="optionalWidth">${LANG.get('working-optional-kit')}</label>
+                <label class="optional-width-label" for="optionalWidth">${LANG.get('machine-kit')}</label>
             </div>`;
             //$optionalWidth.removeAttribute('hidden');
 
             ////let $optionalCheck = $html.querySelector('.optional-width-check');
             //let $optionalLabel = $html.querySelector('.optional-width-label');
-            //$optionalLabel.innerHTML = LANG.get('working-optional-kit');
+            //$optionalLabel.innerHTML = LANG.get('machine-kit');
         } else {
             //$optionalWidth.setAttribute('hidden', '');
         }
 
         let params = {
             'width': {
-                min: currentMachine.widthMin,
-                max: app.getMaxWidth(app.currentMachine, app.currentConcime),
-                unit: 'm',
-                current: app.currentWorkingWidth
+                min: UNIT.convert(currentMachine.widthMin, UNIT.WIDTH),
+                max: UNIT.convert(app.getMaxWidth(app.currentMachine, app.currentConcime), UNIT.WIDTH),
+                unit: UNIT.current().width,
+                current: UNIT.convert(app.currentWorkingWidth, UNIT.WIDTH)
             },
             'speed': {
-                min: 6,
-                max: 20,
-                unit: 'km/h',
-                current: app.currentWorkingSpeed
+                min: UNIT.convert(6, UNIT.SPEED),
+                max: UNIT.convert(20, UNIT.SPEED),
+                unit: UNIT.current().speed,
+                current: UNIT.convert(app.currentWorkingSpeed, UNIT.SPEED)
             },
             'quantity': {
-                min: 3,
-                max: 1000,
-                unit: 'kg/ha',
-                current: app.currentWorkingQuantity
+                min: UNIT.convert(3, UNIT.QUANTITY),
+                max: UNIT.convert(1000, UNIT.QUANTITY),
+                unit: UNIT.current().quantity,
+                current: UNIT.convert(app.currentWorkingQuantity, UNIT.QUANTITY)
             }
         };
 
@@ -927,11 +1162,11 @@ var APP = (function(){
         $html.innerHTML = html;
         $main.append($html);
 
-        app.currentWorkingWidth = document.querySelector('.parameter-width .parameter-slider input').value;
-        app.currentWorkingSpeed = document.querySelector('.parameter-speed .parameter-slider input').value;
-        app.currentWorkingQuantity = document.querySelector('.parameter-quantity .parameter-slider input').value;
+        app.currentWorkingWidth = UNIT.unconvert(document.querySelector('.parameter-width .parameter-slider input').value, UNIT.WIDTH);
+        app.currentWorkingSpeed = UNIT.unconvert(document.querySelector('.parameter-speed .parameter-slider input').value, UNIT.SPEED);
+        app.currentWorkingQuantity = UNIT.unconvert(document.querySelector('.parameter-quantity .parameter-slider input').value, UNIT.QUANTITY);
 
-        app.setTitle('Calculate opening', LANG.get('step-description-params'));
+        app.setTitle(LANG.get('opening-calculate'), LANG.get('step-params'));
 
         return null;
     }
@@ -939,8 +1174,8 @@ var APP = (function(){
         let $parameter = $el.closest('.parameter');
         let $textInput = $parameter.querySelector('.parameter-text input');
 
-        let paramName = UTIL.capitalizeFirstLetter($parameter.getAttribute('data-id'));
-        app['currentWorking' + paramName] = $el.value;
+        let paramName = $parameter.getAttribute('data-id');
+        app['currentWorking' + UTIL.capitalizeFirstLetter(paramName)] = UNIT.unconvert($el.value, paramName);
 
         $textInput.value = $el.value;
     }
@@ -951,8 +1186,8 @@ var APP = (function(){
         let $parameterSlider = document.querySelector('.parameter-width .parameter-slider input');
 
         let maxWidth = app.getMaxWidth(app.currentMachine, app.currentConcime, $optionalWidthCheckbox.checked);
-
-        $parameterMax.innerHTML = maxWidth + 'm';
+        maxWidth = UNIT.convert(maxWidth, UNIT.WIDTH);
+        $parameterMax.innerHTML = maxWidth + ' ' + UNIT.current().width;
         $parameterSlider.setAttribute('max', maxWidth);
 
         app.refreshCheckLabel($parameterSlider);
@@ -962,9 +1197,9 @@ var APP = (function(){
     }
     app.refreshCurrentParams = function($el) {
         let $parameter = $el.closest('.parameter');
-        let paramName = UTIL.capitalizeFirstLetter($parameter.getAttribute('data-id'));
+        let paramName = $parameter.getAttribute('data-id');
 
-        app['currentWorking' + paramName] = $el.value;
+        app['currentWorking' + UTIL.capitalizeFirstLetter(paramName)] = UNIT.unconvert($el.value, paramName);
     }
     app.paramsCompute = function() {
         //app.currentWorkingWidth = document.querySelector('.parameter-width .parameter-slider input').value;
@@ -1027,15 +1262,7 @@ var APP = (function(){
         let currentConcime = app.getConcime(app.currentConcime);
         let $resultList = $html.querySelector('.result-list');
 
-        function getResultHtml(name, value, isCategory = false) {
-            /*let template = `<div class="property">
-                <div class="result-text">${text}</div>
-                <div class="result-line"></div>
-                <div class="result-value">${value}</div>
-            </div>`;*/
-
-            let isImportant = (name.toLowerCase() === 'opening' ? true : false);
-
+        function getResultHtml(name, value, isCategory = false, isImportant = false) {
             let html = '';
             if(isCategory) {
                 html += `<div class="property-category">${name}</div>`;
@@ -1054,9 +1281,9 @@ var APP = (function(){
 
         let opening = app.getOpening(app.currentMachine, app.currentConcime);
 
-        html += getResultHtml('Result', currentMachine.name, true);
-        html += getResultHtml('Opening', opening.opening);
-        html += getResultHtml('Kg/min', opening.kgMin);
+        html += getResultHtml(LANG.get('step-result'), currentMachine.name, true);
+        html += getResultHtml(LANG.get('opening'), opening.opening, false, true);
+        html += getResultHtml('Mass flow', UNIT.convert(opening.kgMin, UNIT.MASS_FLOW, true));
 
         html += getResultHtml('Spreader', currentMachine.name, true);
         html += getResultHtml('Spreader', currentMachine.name);
@@ -1070,15 +1297,15 @@ var APP = (function(){
         html += getResultHtml('Weight', currentConcime.weight);
 
         html += getResultHtml('Working parameters', currentMachine.name, true);
-        html += getResultHtml('Working width', app.currentWorkingWidth);
-        html += getResultHtml('Speed', app.currentWorkingSpeed);
-        html += getResultHtml('Quantity', app.currentWorkingQuantity);
+        html += getResultHtml('Working width', UNIT.convert(app.currentWorkingWidth, UNIT.WIDTH, true));
+        html += getResultHtml('Speed', UNIT.convert(app.currentWorkingSpeed, UNIT.SPEED, true));
+        html += getResultHtml('Quantity', UNIT.convert(app.currentWorkingQuantity, UNIT.QUANTITY, true));
         $resultList.innerHTML = '<div class="property-list">' + html + '</div>';
 
         $main.innerHTML = app.getStepHtml('result');
         $main.append($html);
 
-        app.setTitle('Calculate opening', LANG.get('step-description-result'));
+        app.setTitle(LANG.get('opening-calculate'), LANG.get('step-result'));
 
         return null;
     }
@@ -1113,20 +1340,38 @@ var APP = (function(){
     app.initSavedWorks = function() {
         let html = '';
         let $div = document.createElement('div');
+        $div.classList.add('saved-work-list');
 
         let savedWorks = app.getSavedWorks();
         for (const savedWork of savedWorks) {
             let attr = encodeURIComponent(JSON.stringify(savedWork));
+            let date = UTIL.formatDate(savedWork.date);
+            let machine = app.getMachine(savedWork.currentMachine);
+            let concime = app.getConcime(savedWork.currentConcime);
+
             html += `
                 <div class="saved-work">
-                    <div class="saved-work-title" onclick="APP.loadSavedWork('${attr}');">${savedWork.date}</div>
-                    <div class="saved-work-subtitle">${savedWork.date}</div>
-                    <div class="saved-work-delete" onclick="APP.deleteSavedWork('${savedWork.id || 0}');">X</div>
+                    <div class="saved-work-text">
+                        <div class="saved-work-title" onclick="APP.loadSavedWork('${attr}');">
+                            ${date} / ${machine.name} / ${concime.name}
+                        </div>
+                        <div class="saved-work-subtitle">
+                            <em>${LANG.get('params-width')}</em>${savedWork.currentWorkingWidth}
+                            <em>${LANG.get('params-speed')}</em>${savedWork.currentWorkingSpeed}
+                            <em>${LANG.get('params-quantity')}</em>${savedWork.currentWorkingQuantity}
+                        </div>
+                    </div>
+                    <div class="saved-work-cta">
+                        <div class="saved-work-delete" onclick="APP.deleteSavedWork('${savedWork.id || 0}');">
+                            <img src="img/icons/close-white.svg" />
+                        </div>
+                    </div>
                 </div>`;
         }
-        html = `<div class="saved-work-list">${html}</div>`
 
         $div.innerHTML = html;
+
+        app.setTitle(LANG.get('saved-works'), '');
 
         return $div;
     }
@@ -1198,8 +1443,9 @@ var APP = (function(){
         let $div = document.createElement('div');
 
         for (const lang of LANG.list()) {
+            let isCurrent = (lang.id == LANG.current() ? 'is-current' : '');
             html += `
-                    <div class="lang" onclick="LANG.change('${lang.id}');APP.changeContent('')">
+                    <div class="lang ${isCurrent}" onclick="LANG.change('${lang.id}');APP.changeContent('')">
                         <div class="lang-flag"><img src="img/lang/flag-${lang.id}.png" /></div>
                         <div class="lang-title">${lang.name}</div>
                     </div>`;
@@ -1208,9 +1454,30 @@ var APP = (function(){
 
         $div.innerHTML = html;
 
+        app.setTitle(LANG.get('menu-lang'));
+
         return $div;
     }
 
+
+    // UNIT
+    app.initSetUnit = function() {
+        let html = '';
+        let $div = document.createElement('div');
+        $div.classList.add('unit-list');
+
+        for (const unit of UNIT.list()) {
+            let isCurrent = (unit.id == UNIT.current().id ? 'is-current' : '');
+            html += `
+                    <div class="unit ${isCurrent}" onclick="UNIT.change('${unit.id}');APP.back()">
+                        <div class="unit-title">${LANG.get('unit-system-' + unit.id)}</div>
+                    </div>`;
+        }
+
+        $div.innerHTML = html;
+        app.setTitle(LANG.get('menu-unit'));
+        return $div;
+    }
 
     return app;
 })();

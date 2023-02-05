@@ -21,7 +21,7 @@
         </div>
     </div>
     <div class="menu">
-        <div class="menu-img">
+        <div class="menu-img" onclick="APP.menuClose();APP.changeContent('');">
             <img src="img/logo-full.svg" alt="">
         </div>
         <button class="menu-close" onclick="APP.menuClose();">
@@ -30,7 +30,7 @@
 
         <button class="menu-saved" onclick="APP.menuClose();APP.changeContent('saved-works');"></button>
         <button class="menu-lang" onclick="APP.menuClose();APP.changeContent('set-language');"></button>
-        <button class="menu-unit"></button>
+        <button class="menu-unit" onclick="APP.menuClose();APP.changeContent('set-unit');"></button>
         <button class="menu-who"></button>
         <button class="menu-contact"></button>
 
@@ -39,15 +39,10 @@
         </div>
     </div>
 
-    <!--<div class="title">
-        <div class="red">
-            Calculate opening
-        </div>
-
-        <div class="gray" onclick="APP.hideConcime();">
-            test test test
-        </div>
-    </div>-->
+    <div class="title is-hidden">
+        <div class="red"></div>
+        <div class="gray"></div>
+    </div>
 
     <div class="main">
 
@@ -57,7 +52,7 @@
         <div class="index">
             <button class="set-machine" onclick="APP.changeContent('set-machine');">
                 <div class="button-header">
-                    <span>Hydraulic control fertilizer spreader</span>
+                    <span>{machine-hydraulic-spreader}</span>
                 </div>
                 <div class="button-footer">
                     <div class="button-img">
@@ -65,17 +60,15 @@
                     </div>
                     <div class="button-title">
                         <div>
-                            <span>Calculate opening</span>
+                            <span>{opening-calculate}</span>
                         </div>
                         <img src="img/icons/chevron-right-white.svg" alt="">
                     </div>
                 </div>
-
-
             </button>
             <button class="set-machine" onclick="APP.changeContent('flow-factor');" disabled>
                 <div class="button-header">
-                    <span>Electronic control fertilizer spreader</span>
+                    <span>{machine-electronic-spreader}</span>
                 </div>
                 <div class="button-footer">
                     <div class="button-img">
@@ -83,7 +76,7 @@
                     </div>
                     <div class="button-title">
                         <div>
-                            <span>Flow factor</span>
+                            <span>{flow-factor}</span>
                         </div>
                         <img src="img/icons/chevron-right-white.svg" alt="">
                     </div>
@@ -91,7 +84,7 @@
             </button>
             <button class="set-machine" onclick="APP.changeContent('conversion');" disabled>
                 <div class="button-header">
-                    <span>Convert differents units of measurement</span>
+                    <span>{conversions-description}</span>
                 </div>
                 <div class="button-footer">
                     <div class="button-img">
@@ -99,7 +92,7 @@
                     </div>
                     <div class="button-title">
                         <div>
-                            <span>Conversions</span>
+                            <span>{conversions}</span>
                             <small></small>
                         </div>
                         <img src="img/icons/chevron-right-white.svg" alt="">
@@ -196,9 +189,8 @@
     <template data-section="saved-works">
 
     </template>
-    <template data-section="set-language">
-
-    </template>
+    <template data-section="set-language"></template>
+    <template data-section="set-unit"></template>
 
     <script type="text/javascript" src="js/app.js?v=1"></script>
     <script type="text/javascript" src="js/data.js?v=1"></script>
