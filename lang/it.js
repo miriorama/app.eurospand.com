@@ -11,12 +11,17 @@ var LANG_DATA = {
 "download": "Scarica",
 "fertilizer": "Fertilizzanti",
 
+"calculate-params": "Calcola parametri",
+
 "flow-factor-kg-monitor": "Kg sul monitor",
 "flow-factor-liters-hopper": "Litri in tramoggia",
-"flow-factor-quantity-end": "Quantià prodotto fine lavoro",
+"flow-factor-quantity-end": "Quantità prodotto fine lavoro",
 "flow-factor-quantity-start": "Quantità prodotto inizio lavoro",
-"flow-factor-specific weight": "Peso specifico prodotto",
+"flow-factor-specific-weight": "Peso specifico prodotto",
 "flow-factor": "Fattore di flusso",
+"flow-factor-liter-start": "Litri inizio",
+"flow-factor-liter-end": "Litri fine",
+"flow-factor-instructions": "Istruzioni",
 
 "full-field": "Pieno campo",
 "in-progress": "in corso",
@@ -52,7 +57,7 @@ var LANG_DATA = {
 "product-form": "Forma",
 "product-fractionation": "Frazionamento",
 "product-manufacturer": "Produttore",
-"product-products": "PRODOTTI",
+"products": "PRODOTTI",
 "product-shape-granular": "Granulare",
 "product-shape-mineral": "Minerale",
 "product-shape-pelleted": "Pellettato",
@@ -89,7 +94,7 @@ var LANG_DATA = {
 "unit-set-measurement": "Sistema di misura impostato",
 "unit-speed": "Velocità",
 
-
+"specific-weight": "Peso specifico",
 "weight": "PESO",
 "welcome": "Benvenuto su",
 "working-parametres": "PARAMETRI DI LAVORO",

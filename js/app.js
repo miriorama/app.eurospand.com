@@ -200,7 +200,6 @@ var LANG = (function () {
     return lang;
 })();
 
-
 var UNIT = (function () {
     let unit = {
         data: null,
@@ -259,7 +258,9 @@ var UNIT = (function () {
                 width: 'm',
                 speed: 'Km/h',
                 quantity: 'Kg/ha',
-                massFlow: 'Kg/min'
+                massFlow: 'Kg/min',
+                specificWeight: 'Kg/dm3',
+                weight: 'Kg'
             },
             {
                 id:'b', // imperiale britannico
@@ -267,6 +268,8 @@ var UNIT = (function () {
                 speed: 'mph',
                 quantity: 'lb/ac',
                 massFlow: 'lb/min',
+                specificWeight: 'lb/gal',
+                weight: 'lb'
             },
             {
                 id:'a', // imperiale americano
@@ -274,6 +277,8 @@ var UNIT = (function () {
                 speed: 'mph',
                 quantity: 'lb/ac',
                 massFlow: 'lb/min',
+                specificWeight: 'lb/gal',
+                weight: 'lb'
             }
         ];
     }
@@ -353,31 +358,30 @@ var UNIT = (function () {
     }*/
 
     const UNITS = {
-        'width': 3.281,
-        'speed': 0.621,
-        'quantity': 0.892,
-        'massFlow': 2.205
-    }
+        'width': {'b': 3.281, 'a': 3.281},
+        'speed': {'b': 0.621, 'a': 0.621},
+        'quantity': {'b': 0.892, 'a': 0.892},
+        'massFlow': {'b': 2.205, 'a': 2.205},
+        'specificWeight': {'b': 10.022, 'a': 8.345},
+        'weight': {'b': 2.205, 'a': 2.205},
+        'capacity': {'b': 0.22, 'a': 0.264},
+        'quantityCapacity': {'b': 10.036, 'a': 8.364}
+    };
 
-    unit.convert = function(value, grandezza, addLabel = false) {
-        let ret;
+    unit.fullConvert = function(fromValue, grandezza, fromUnit = 'm', toUnit = 'a', addLabel = false) {
+        let ret = Number(fromValue);
+        fromValue = Number(fromValue);
 
-        if(unit.current().id == 'm') {
-            return value;
+        if(fromUnit == toUnit) {
+            return fromValue;
         }
 
-        /*switch(grandezza){
-            case 'width':
-            ret = value * 3.281;
-            break;
-            case 'speed':
-                ret = value * 0.621;
-            break;
-            case 'quantity':
-                ret = value * 0.892;
-            break;
-        }*/
-        ret = value * UNITS[grandezza];
+        if(fromUnit != 'm') {
+            ret = fromValue / UNITS[grandezza][fromUnit];
+        } else {
+            ret = fromValue * UNITS[grandezza][toUnit];
+        }
+
         ret = ret.toFixed(2);
 
         if(addLabel) {
@@ -386,16 +390,12 @@ var UNIT = (function () {
 
         return ret;
     }
-    unit.unconvert = function(value, grandezza) {
-        let ret;
 
-        if(unit.current().id == 'm') {
-            return value;
-        }
-
-        ret = value / UNITS[grandezza];
-
-        return ret.toFixed(2);
+    unit.convert = function(fromValue, grandezza, addLabel = false) {
+        return unit.fullConvert(fromValue, grandezza, 'm', unit.current().id, addLabel);
+    }
+    unit.unconvert = function(fromValue, grandezza) {
+        return unit.fullConvert(fromValue, grandezza, unit.current().id, 'm');
     }
 
     return unit;
@@ -472,12 +472,13 @@ var APP = (function(){
 
     const LOCAL_STORAGE_SAVED_WORKS = 'eurospandSavedWorks';
 
-    let $body, $main, $menu, $title, $mainTitle, $mainSubtitle;
+    let $body, $main, $menu, $homeBtn, $title, $mainTitle, $mainSubtitle;
 
     app.init = function() {
         $body = document.querySelector('body');
         $main = document.querySelector('.main');
         $menu = document.querySelector('.menu');
+        $homeBtn = document.querySelector('.home-button');
         $title = document.querySelector('.title');
         $mainTitle = $title.querySelector('.title .red');
         $mainSubtitle = $title.querySelector('.title .gray');
@@ -516,10 +517,6 @@ var APP = (function(){
                 template: 'result',
                 callback: app.initResult
             },
-            {   regex: '^flow-factor/?$',
-                template: 'flow-factor',
-                callback: app.initFlowFactor
-            },
             {   regex: '^saved-works/?$',
                 template: 'saved-works',
                 callback: app.initSavedWorks
@@ -531,7 +528,23 @@ var APP = (function(){
             {   regex: '^set-unit/?$',
                 template: 'set-unit',
                 callback: app.initSetUnit
-            }
+            },
+            {   regex: '^calculate-params/?$',
+                template: 'calculate-params',
+                callback: app.initCalculateParams
+            },
+            {   regex: '^flow-factor/?$',
+                template: 'flow-factor',
+                callback: app.initFlowFactor
+            },
+            {   regex: '^conversions/?$',
+                template: 'conversions',
+                callback: app.initConversions
+            },
+            {   regex: '^concimi/?$',
+                template: 'concimi',
+                callback: app.initConcimi
+            },
         ];
 
         // gestione hash
@@ -614,6 +627,13 @@ var APP = (function(){
 
                 break;
             }
+        }
+
+
+        if(app.hash) {
+            $homeBtn.classList.add('is-visible');
+        } else {
+            $homeBtn.classList.remove('is-visible');
         }
 
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1403,6 +1423,34 @@ var APP = (function(){
     }
 
 
+    // CALCULATE PARAMS
+    app.initCalculateParams = function($html) {
+        $main.innerHTML = LANG.replace($html);
+
+        app.setTitle();
+
+        return null;
+    }
+    app.calculateParamsCompute = function() {
+        let flowSpecificWeight = document.querySelector('#flowSpecificWeight').value;
+        let flowQuantityStart = document.querySelector('#flowQuantityStart').value;
+        let flowQuantityEnd = document.querySelector('#flowQuantityEnd').value;
+        let flowLiterStart = document.querySelector('#flowLiterStart').value;
+        let flowLiterEnd = document.querySelector('#flowLiterEnd').value;
+
+        let result = (flowQuantityStart - flowQuantityEnd) / (flowLiterStart - flowLiterEnd) * flowSpecificWeight;
+
+        result = Math.max(result, 0);
+        result = UTIL.round(result);
+
+        if(isNaN(result)) {
+            result = 0;
+        }
+
+        let $result = document.querySelector('.result-number');
+        $result.innerHTML = result;
+    }
+
     // FLOW FACTOR
     app.getFlowStepHtml = function(step) {
         let html = '';
@@ -1430,12 +1478,123 @@ var APP = (function(){
         return html;
     }
     app.initFlowFactor = function($html) {
-        $main.innerHTML = app.getFlowStepHtml('machine');
+        $main.innerHTML = LANG.replace($html);
         $main.append($html);
+
+        app.setTitle(LANG.get('flow-factor'));
 
         return null;
     }
 
+    // CONVERSIONS
+    app.initConversions = function($html) {
+        /*let fromSystemId = $html.querySelector('.system-list-from .system-option.is-selected').getAttribute('data-system');
+        let toSystemId = $html.querySelector('.system-list-to .system-option.is-selected').getAttribute('data-system');
+
+        let units = ['width'];
+        for (const unit of units) {
+            let $conversion = $html.querySelector('[data-unit]');
+            let $unitFrom = $conversion.querySelector('.conversion-from .conversion-unit');
+            let $unitTo = $conversion.querySelector('.conversion-to .conversion-unit');
+            let $inputTo = $conversion.querySelector('.conversion-to input');
+
+            $unitFrom.innerHTML = UNIT.get(fromSystemId)[unit];
+            $unitTo.innerHTML = UNIT.get(toSystemId)[unit];
+
+        }*/
+        app.setTitle(LANG.get('conversions'));
+        $main.innerHTML = LANG.replace($html);
+        $main.append($html);
+
+        app.refreshConversions();
+
+        return null;
+    }
+    app.conversionsCalculate = function() {
+        let fromSystemId = document.querySelector('.system-list-from .system-option.is-selected').getAttribute('data-system');
+        let toSystemId = document.querySelector('.system-list-to .system-option.is-selected').getAttribute('data-system');
+        let $conversionList = document.querySelectorAll('.conversion-list .conversion');
+
+        for (const $conversion of $conversionList) {
+            let unitId = $conversion.getAttribute('data-unit');
+            let inputFrom = $conversion.querySelector('.conversion-from input').value;
+            let $unitFrom = $conversion.querySelector('.conversion-from .conversion-unit');
+            let $unitTo = $conversion.querySelector('.conversion-to .conversion-unit');
+            let $inputTo = $conversion.querySelector('.conversion-to input');
+
+            $inputTo.value = UNIT.fullConvert(inputFrom, unitId, fromSystemId, toSystemId);
+        }
+    }
+    app.refreshConversions = function() {
+        let fromSystemId = document.querySelector('.system-list-from .system-option.is-selected').getAttribute('data-system');
+        let toSystemId = document.querySelector('.system-list-to .system-option.is-selected').getAttribute('data-system');
+
+        let $conversionList = document.querySelectorAll('.conversion-list .conversion');
+        for (const $conversion of $conversionList) {
+            let unitId = $conversion.getAttribute('data-unit');
+            let inputFrom = $conversion.querySelector('.conversion-from input').value;
+            let $unitFrom = $conversion.querySelector('.conversion-from .conversion-unit');
+            let $unitTo = $conversion.querySelector('.conversion-to .conversion-unit');
+            let $inputTo = $conversion.querySelector('.conversion-to input');
+
+            $unitFrom.innerHTML = UNIT.get(fromSystemId)[unitId];
+            $unitTo.innerHTML = UNIT.get(toSystemId)[unitId];
+        }
+    }
+    app.selectConvertUnit = function($el) {
+        let $isSelected = $el.closest('.system-list').querySelector('.is-selected');
+        $isSelected.classList.remove('is-selected');
+        $el.classList.add('is-selected');
+
+        app.refreshConversions();
+    }
+
+    app.initConcimi = function($html) {
+        let $concimeTypeList = $html.querySelector('.concime-type-list');
+        let $concimeList = $html.querySelector('.concime-list');
+        let concimeList = app.getConcime();
+
+        // Tipi di concime
+        let html = '<div class="concime-type-list"><div class="concime-type-title">Filter by:</div>';
+        for (const concimeType of app.concimeTypeList) {
+            let concimeTypeName = UTIL.capitalizeFirstLetter(concimeType);
+            html += `<button class="concime-type" onclick="APP.setConcimeType(this, '${concimeType}');">
+                <div class="concime-type-img">
+                    <img src="img/concime-type/${concimeType}.jpg" alt="${concimeTypeName}" />
+                </div>
+                ${concimeTypeName}
+            </button>`;
+        }
+        html += '</div>';
+
+        html += '<div class="concime-list">';
+        for (const concimeId of Object.keys(concimeList)) {
+            let concime = concimeList[concimeId];
+
+            html += `<button class="concime" data-concime-type="${concime.type}" onclick="APP.showConcime('${concimeId}');">
+                <div class="concime-img">
+                    <img src="img/concime/${concimeId}.png" alt="${concime.name}" />
+                </div>
+                <div class="concime-footer">
+                    <div class="concime-info" onclick="event.stopPropagation();APP.showConcime('${concimeId}');">
+                        <img src="img/icons/info-white.svg" />
+                    </div>
+                    <div class="concime-title">
+                        <div>${concime.name}</div>
+                        <img src="img/icons/chevron-right-white.svg" />
+                    </div>
+                </div>
+            </button>`;
+        }
+        html += '</div>';
+
+        $main.innerHTML = html;
+        //$main.append($html);
+
+        app.setTitle(LANG.get('products'));
+
+        return null;
+    }
 
     // LANG
     app.initSetLanguage = function() {

@@ -15,6 +15,9 @@
             <button class="logo" onclick="APP.changeContent('');">
                 <img src="img/logo.svg" alt="">
             </button>
+            <button class="home-button" onclick="APP.changeContent('');">
+                <img src="img/icons/home.svg" alt="">
+            </button>
             <button class="menu-button" onclick="APP.menuOpen();">
                 <img src="img/icons/menu.svg" alt="">
             </button>
@@ -66,7 +69,7 @@
                     </div>
                 </div>
             </button>
-            <button class="set-machine" onclick="APP.changeContent('flow-factor');" disabled>
+            <button class="set-machine" onclick="APP.changeContent('calculate-params');">
                 <div class="button-header">
                     <span>{machine-electronic-spreader}</span>
                 </div>
@@ -76,43 +79,17 @@
                     </div>
                     <div class="button-title">
                         <div>
-                            <span>{flow-factor}</span>
+                            <span>{calculate-params}</span>
                         </div>
                         <img src="img/icons/chevron-right-white.svg" alt="">
                     </div>
                 </div>
             </button>
-            <button class="set-machine" onclick="APP.changeContent('conversion');" disabled>
-                <div class="button-header">
-                    <span>{conversions-description}</span>
-                </div>
-                <div class="button-footer">
-                    <div class="button-img">
-                        <img src="img/icons/conversion.svg" alt="">
-                    </div>
-                    <div class="button-title">
-                        <div>
-                            <span>{conversions}</span>
-                            <small></small>
-                        </div>
-                        <img src="img/icons/chevron-right-white.svg" alt="">
-                    </div>
-                </div>
-            </button>
-            <!--<button class="set-machine" onclick="APP.changeContent('conversion');">
-                <div class="button-img">
-                    <img src="img/conversioni.jpg" alt="">
-                </div>
-                <div class="button-text">
-                    <div class="button-title"></div>
-                    <div class="button-subtitle">
-                        <span>Conversioni</span>
-                        <img src="img/icons/chevron-right-white.svg" alt="">
-                    </div>
-                </div>
-            </button>-->
-            <div class="index-footer">
+            <!--<div class="index-footer">
                 © 2023 - P.IVA 00164000044
+            </div>-->
+
+            <div class="index-bkg">
             </div>
         </div>
     </template>
@@ -159,38 +136,240 @@
         </div>
     </template>
 
-    <template data-section="flow-factor">
-        <div class="field">
-            <input type="text" id="flowWeight">
-            <label for="flowWeight">flowWeight</label>
-        </div>
-        <div class="field">
-            <input type="text" id="flowQuantityStart">
-            <label for="flowQuantityStart">flowQuantityStart</label>
-        </div>
-        <div class="field">
-            <input type="text" id="flowQuantityEnd">
-            <label for="flowQuantityEnd">flowQuantityEnd</label>
-        </div>
-        <div class="field">
-            <input type="text" id="flowLiterStart">
-            <label for="flowLiterStart">flowLiterStart</label>
-        </div>
-        <div class="field">
-            <input type="text" id="flowLiterEnd">
-            <label for="flowLiterEnd">flowLiterEnd</label>
-        </div>
-
-        <div class="parameter-cta">
-            <button class="btn params-reset" onclick="APP.paramsReset();">reset</button>
-            <button class="btn btn-important params-compute" onclick="APP.paramsCompute();">compute</button>
+    <template data-section="calculate-params">
+        <div class="index">
+            <button onclick="APP.changeContent('flow-factor');">
+                <div class="button-footer">
+                    <div class="button-img">
+                        <img src="img/icons/flow-factor.svg" alt="">
+                    </div>
+                    <div class="button-title">
+                        <div>
+                            <span>{flow-factor}</span>
+                        </div>
+                        <img src="img/icons/chevron-right-white.svg" alt="">
+                    </div>
+                </div>
+            </button>
+            <button onclick="APP.changeContent('conversions');">
+                <div class="button-footer">
+                    <div class="button-img">
+                        <img src="img/icons/conversion.svg" alt="">
+                    </div>
+                    <div class="button-title">
+                        <div>
+                            <span>{conversions}</span>
+                            <small></small>
+                        </div>
+                        <img src="img/icons/chevron-right-white.svg" alt="">
+                    </div>
+                </div>
+            </button>
+            <button onclick="APP.changeContent('concimi');">
+                <div class="button-footer">
+                    <div class="button-img">
+                        <img src="img/icons/flower-white.svg" alt="">
+                    </div>
+                    <div class="button-title">
+                        <div>
+                            <span>{products}</span>
+                            <small></small>
+                        </div>
+                        <img src="img/icons/chevron-right-white.svg" alt="">
+                    </div>
+                </div>
+            </button>
+            <div class="index-footer">
+                © 2023 - P.IVA 00164000044
+            </div>
         </div>
     </template>
+
+    <template data-section="flow-factor">
+        <div class="parameter-list flow-factor">
+            <div class="parameter-row">
+                <div class="parameter parameter-full">
+                    <div class="parameter-title">{flow-factor-specific-weight}</div>
+                    <div class="parameter-input">
+                        <div class="parameter-text">
+                            <input type="text" value="0" id="flowSpecificWeight">
+                            <div class="parameter-unit">KG/DM3</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="parameter-row">
+                <div class="parameter">
+                    <div class="parameter-title">{flow-factor-quantity-start}</div>
+                    <div class="parameter-input">
+                        <div class="parameter-text">
+                            <input type="text" value="0" id="flowQuantityStart">
+                            <div class="parameter-unit">KG</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="parameter">
+                    <div class="parameter-title">{flow-factor-quantity-end}</div>
+                    <div class="parameter-input">
+                        <div class="parameter-text">
+                            <input type="text" value="0" id="flowQuantityEnd">
+                            <div class="parameter-unit">KG</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="parameter-row">
+                <div class="parameter">
+                    <div class="parameter-title">{flow-factor-liter-start}</div>
+                    <div class="parameter-input">
+                        <div class="parameter-text">
+                            <input type="text" value="0" id="flowLiterStart">
+                            <div class="parameter-unit">L</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="parameter">
+                    <div class="parameter-title">{flow-factor-liter-end}</div>
+                    <div class="parameter-input">
+                        <div class="parameter-text">
+                            <input type="text" value="0" id="flowLiterEnd">
+                            <div class="parameter-unit">L</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="parameter-result">
+                <div class="result-title">{flow-factor}</div>
+                <div class="result-number">0</div>
+            </div>
+        </div>
+
+        <div class="footer-cta">
+            <button class="btn" onclick="">{flow-factor-instructions}</button>
+            <button class="btn btn-important" onclick="APP.calculateParamsCompute();">{compute}</button>
+        </div>
+    </template>
+
+    <template data-section="conversions">
+        <div class="system-list-container">
+            <div class="system-list system-list-from">
+                <div class="system-label">Da</div>
+                <div onclick="APP.selectConvertUnit(this)" data-system="m" class="system-option is-selected">{unit-system-m}</div>
+                <div onclick="APP.selectConvertUnit(this)" data-system="a" class="system-option">{unit-system-a}</div>
+                <div onclick="APP.selectConvertUnit(this)" data-system="b" class="system-option">{unit-system-b}</div>
+            </div>
+            <div class="system-list system-list-to">
+                <div class="system-label">A</div>
+                <div onclick="APP.selectConvertUnit(this)" data-system="m" class="system-option">{unit-system-m}</div>
+                <div onclick="APP.selectConvertUnit(this)" data-system="a" class="system-option is-selected">{unit-system-a}</div>
+                <div onclick="APP.selectConvertUnit(this)" data-system="b" class="system-option">{unit-system-b}</div>
+            </div>
+        </div>
+        <div class="conversion-list">
+            <div class="conversion-row">
+                <div class="conversion" data-unit="specificWeight">
+                    <div class="conversion-title">{specific-weight}</div>
+                    <div class="conversion-input-list">
+                        <div class="conversion-input conversion-from">
+                            <input type="text" value="0">
+                            <div class="conversion-unit"></div>
+                        </div>
+                        <div class="conversion-arrow">
+                            <img src="img/icons/arrow-right.svg" alt="">
+                        </div>
+                        <div class="conversion-input conversion-to">
+                            <input type="text" value="0">
+                            <div class="conversion-unit"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="conversion-row">
+                <div class="conversion" data-unit="width">
+                    <div class="conversion-title">{params-width}</div>
+                    <div class="conversion-input-list">
+                        <div class="conversion-input conversion-from">
+                            <input type="text" value="0">
+                            <div class="conversion-unit"></div>
+                        </div>
+                        <div class="conversion-arrow">
+                            <img src="img/icons/arrow-right.svg" alt="">
+                        </div>
+                        <div class="conversion-input conversion-to">
+                            <input type="text" value="0">
+                            <div class="conversion-unit"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="conversion-row">
+                <div class="conversion" data-unit="speed">
+                    <div class="conversion-title">{params-speed}</div>
+                    <div class="conversion-input-list">
+                        <div class="conversion-input conversion-from">
+                            <input type="text" value="0">
+                            <div class="conversion-unit"></div>
+                        </div>
+                        <div class="conversion-arrow">
+                            <img src="img/icons/arrow-right.svg" alt="">
+                        </div>
+                        <div class="conversion-input conversion-to">
+                            <input type="text" value="0">
+                            <div class="conversion-unit"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="conversion-row">
+                <div class="conversion" data-unit="quantity">
+                    <div class="conversion-title">{params-quantity}</div>
+                    <div class="conversion-input-list">
+                        <div class="conversion-input conversion-from">
+                            <input type="text" value="0">
+                            <div class="conversion-unit"></div>
+                        </div>
+                        <div class="conversion-arrow">
+                            <img src="img/icons/arrow-right.svg" alt="">
+                        </div>
+                        <div class="conversion-input conversion-to">
+                            <input type="text" value="0">
+                            <div class="conversion-unit"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="conversion-row">
+                <div class="conversion" data-unit="weight">
+                    <div class="conversion-title">{weight}</div>
+                    <div class="conversion-input-list">
+                        <div class="conversion-input conversion-from">
+                            <input type="text" value="0">
+                            <div class="conversion-unit"></div>
+                        </div>
+                        <div class="conversion-arrow">
+                            <img src="img/icons/arrow-right.svg" alt="">
+                        </div>
+                        <div class="conversion-input conversion-to">
+                            <input type="text" value="0">
+                            <div class="conversion-unit"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-cta">
+            <button class="btn btn-important" onclick="APP.conversionsCalculate();">{convert}</button>
+        </div>
+    </template>
+
     <template data-section="saved-works">
 
     </template>
+
     <template data-section="set-language"></template>
     <template data-section="set-unit"></template>
+    <template data-section="concimi"></template>
 
     <script type="text/javascript" src="js/app.js?v=1"></script>
     <script type="text/javascript" src="js/data.js?v=1"></script>
