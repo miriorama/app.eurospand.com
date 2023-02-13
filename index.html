@@ -376,5 +376,13 @@
 
     <script type="text/javascript" src="js/app.js?v=2"></script>
     <script type="text/javascript" src="js/data.js?v=2"></script>
+
+    <script>
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.register(
+            '/sw.js'
+          );
+        }
+      </script>
 </body>
 </html>
