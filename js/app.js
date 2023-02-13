@@ -178,8 +178,6 @@ var LANG = (function () {
     }
 
     lang.replace = function(obj) {
-        console.log(typeof obj);
-
         let str = '';
         if(typeof obj !== 'string') {
             let renderer = document.createElement('div');
@@ -187,7 +185,6 @@ var LANG = (function () {
             //renderer.innerHTML = obj;
 
             str = renderer.innerHTML;
-            console.log(str);
         }
 
         str = String(str).replace(/\{(.*?)\}/g, function(match, token) {
