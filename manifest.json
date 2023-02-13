@@ -34,7 +34,7 @@
     ],
     "screenshots": [
         {
-            "src": "img//screenshot.png",
+            "src": "img/screenshot.png",
             "sizes": "1280x720",
             "type": "image/png"
         }
