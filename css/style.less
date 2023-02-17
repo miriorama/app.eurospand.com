@@ -145,7 +145,7 @@ button {
 	outline: 0;
 	background-color: transparent;
 	cursor: pointer;
-	font-family: 'Roboto Condensed';
+	font-family: 'Roboto Condensed', sans-serif;
 }
 
 .btn {
@@ -691,14 +691,14 @@ input[type=checkbox].switch{
 	.index-bkg {
 		position: absolute;
     	width: 100%;
-    	height: 100%;
     	bottom: 0;
     	z-index: -1;
-    	background-image: url(../img/index-background-3.png);
+    	background-image: url(../img/index-background.jpg);
     	background-position: bottom right;
-    	background-size: contain;
+    	background-size: cover;
     	background-repeat: no-repeat;
-		/*max-width: 768px;*/
+		aspect-ratio: 1.34;
+		max-width: 1024px;
 	}
 }
 
@@ -1858,6 +1858,15 @@ input[type=checkbox].switch{
 	}
 	.main {
 		opacity: 1;
+	}
+}
+
+@media (max-width:1024px){
+
+	.index {
+		.index-bkg {
+    		height: 100%;
+		}
 	}
 }
 
