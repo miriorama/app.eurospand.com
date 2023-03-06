@@ -1,6 +1,6 @@
 var GHPATH = '';
 var APP_PREFIX = 'eurospand-';
-var VERSION = 'v=0.18';
+var VERSION = 'v=0.19';
 var URLS = [
     `${GHPATH}/index.html`,
     `${GHPATH}/css/style.css`,

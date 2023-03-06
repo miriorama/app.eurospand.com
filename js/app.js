@@ -465,7 +465,7 @@ var API = (function () {
 
 var APP = (function(){
     let app = {
-        debug: true,
+        debug: false,
         currentMachine: null,
         currentConcime: null,
         concimeTypeList: ['fertilizzanti', 'semi', 'lumachicida'],
