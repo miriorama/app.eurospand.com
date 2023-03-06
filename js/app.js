@@ -205,7 +205,8 @@ var UNIT = (function () {
         WIDTH: 'width',
         SPEED: 'speed',
         QUANTITY: 'quantity',
-        MASS_FLOW: 'massFlow'
+        MASS_FLOW: 'massFlow',
+        WEIGHT: 'weight'
     };
 
     const LOCAL_STORAGE_UNIT = 'eurospandUnit';
@@ -366,23 +367,26 @@ var UNIT = (function () {
     };
 
     unit.fullConvert = function(fromValue, grandezza, fromUnit = 'm', toUnit = 'a', addLabel = false) {
+        if(fromValue === null) {
+            return null;
+        }
         let ret = Number(fromValue);
         fromValue = Number(fromValue);
 
-        if(fromUnit == toUnit) {
-            return fromValue;
-        }
+        if(fromUnit != toUnit) {
+            if(fromUnit != 'm') {
+                ret = fromValue / UNITS[grandezza][fromUnit];
+            } else {
+                ret = fromValue * UNITS[grandezza][toUnit];
+            }
 
-        if(fromUnit != 'm') {
-            ret = fromValue / UNITS[grandezza][fromUnit];
+            ret = ret.toFixed(2);
         } else {
-            ret = fromValue * UNITS[grandezza][toUnit];
+            ret = fromValue;
         }
-
-        ret = ret.toFixed(2);
 
         if(addLabel) {
-            ret += ' ' + UNIT.current()[grandezza];
+            ret = ret + ' ' + UNIT.current()[grandezza];
         }
 
         return ret;
@@ -464,7 +468,11 @@ var APP = (function(){
         debug: true,
         currentMachine: null,
         currentConcime: null,
-        concimeTypeList: ['fertilizzanti', 'semi', 'lumachicida']
+        concimeTypeList: ['fertilizzanti', 'semi', 'lumachicida'],
+
+        currentWorkingWidth: null,
+        currentWorkingSpeed: null,
+        currentWorkingQuantity: null,
     }
 
     const LOCAL_STORAGE_SAVED_WORKS = 'eurospandSavedWorks';
@@ -481,7 +489,7 @@ var APP = (function(){
         $mainSubtitle = $title.querySelector('.title .gray');
 
         if(app.debug) {
-            app.currentMachine = 'david-compact';
+            app.currentMachine = 'david-compact-fruit';
             app.currentConcime = 'mesurol-pro';
             app.currentWorkingWidth = 9;
             app.currentWorkingSpeed = 6;
@@ -1104,9 +1112,11 @@ var APP = (function(){
     app.initSetWorkingParameters = function($html) {
         if(!app.currentMachine) {
             app.changeContent('set-machine');
+            return;
         }
         if(!app.currentConcime) {
             app.changeContent('set-concime');
+            return;
         }
         let currentMachine = app.getMachine(app.currentMachine);
 
@@ -1116,13 +1126,15 @@ var APP = (function(){
                 <input class="optional-width-checkbox switch" id="optionalWidth" name="optionalWidth" type="checkbox" onchange="APP.refreshMaxWorkingWidth();">
                 <label class="optional-width-label" for="optionalWidth">${LANG.get('machine-kit')}</label>
             </div>`;
-            //$optionalWidth.removeAttribute('hidden');
-
-            ////let $optionalCheck = $html.querySelector('.optional-width-check');
-            //let $optionalLabel = $html.querySelector('.optional-width-label');
-            //$optionalLabel.innerHTML = LANG.get('machine-kit');
-        } else {
-            //$optionalWidth.setAttribute('hidden', '');
+        }
+        let widthTypeHtml = '';
+        if(currentMachine.widthFullField) {
+            let rowDistributionLabel = LANG.get('row-distribution');
+            let fullFieldLabel = LANG.get('full-field');
+            widthTypeHtml = `<div class="width-type-list">
+                <button class="width-type is-selected" onclick="APP.setWidthType(this);" data-width-type="row">${rowDistributionLabel}</button>
+                <button class="width-type" onclick="APP.setWidthType(this);" data-width-type="full">${fullFieldLabel}</button>
+            </div>`;
         }
 
         let params = {
@@ -1145,7 +1157,7 @@ var APP = (function(){
                 current: UNIT.convert(app.currentWorkingQuantity, UNIT.QUANTITY)
             }
         };
-
+        console.log(app.currentWorkingWidth);
         let $parameterList = $html.querySelector('.parameter-list');
         let html = '';
         for (const paramId of Object.keys(params)) {
@@ -1155,18 +1167,17 @@ var APP = (function(){
             html += `<div class="parameter parameter-${paramId}" data-id="${paramId}">
                 <div class="parameter-title">${UTIL.capitalizeFirstLetter(paramId)}</div>
                 ${(paramId === 'width' ? optionalHtml : '')}
+                ${(paramId === 'width' ? widthTypeHtml : '')}
                 <div class="parameter-input">
                     <div class="parameter-text">
-                        <input id="widthText" type="text" value="${current}" onchange="APP.refreshCurrentParams(this);">
+                        <input type="number" value="${current}" onchange="APP.refreshCurrentParams(this);">
                     </div>
                     <div class="parameter-slider">
                         <div class="parameter-max">${param.max} ${param.unit}</div>
                         <div class="parameter-min">${param.min} ${param.unit}</div>
-                        <input id="widthRange" type="range" step="1" max="${param.max}" min="${param.min}" value="${current}" oninput="APP.refreshCheckLabel(this);">
+                        <input type="range" step="0.01" max="${param.max}" min="${param.min}" value="${current}" oninput="APP.refreshCheckLabel(this);">
                     </div>
                 </div>
-
-
             </div>`;
 
             /*let param = params[paramId];
@@ -1195,6 +1206,14 @@ var APP = (function(){
 
         return null;
     }
+    app.setWidthType = function($el) {
+        let $selected = document.querySelector('.width-type.is-selected');
+        if($selected) {
+            $selected.classList.remove('is-selected');
+        }
+        $el.classList.add('is-selected');
+        APP.refreshMaxWorkingWidth();
+    }
     app.refreshCheckLabel = function($el) {
         let $parameter = $el.closest('.parameter');
         let $textInput = $parameter.querySelector('.parameter-text input');
@@ -1205,12 +1224,14 @@ var APP = (function(){
         $textInput.value = $el.value;
     }
     app.refreshMaxWorkingWidth = function() {
-        let currentMachine = app.getMachine(app.currentMachine);
+        let $widthType = document.querySelector('.width-type.is-selected');
+        let widthType = ($widthType ? $widthType.getAttribute('data-width-type') : null);
         let $optionalWidthCheckbox = document.querySelector('.optional-width-checkbox');
         let $parameterMax = document.querySelector('.parameter-width .parameter-max');
         let $parameterSlider = document.querySelector('.parameter-width .parameter-slider input');
 
-        let maxWidth = app.getMaxWidth(app.currentMachine, app.currentConcime, $optionalWidthCheckbox.checked);
+        let optionalWidthCheckbox = ($optionalWidthCheckbox ? $optionalWidthCheckbox.checked : false);
+        let maxWidth = app.getMaxWidth(app.currentMachine, app.currentConcime, optionalWidthCheckbox, widthType);
         maxWidth = UNIT.convert(maxWidth, UNIT.WIDTH);
         $parameterMax.innerHTML = maxWidth + ' ' + UNIT.current().width;
         $parameterSlider.setAttribute('max', maxWidth);
@@ -1224,15 +1245,30 @@ var APP = (function(){
             app.refreshCheckLabel($range);
         }
 
-        if(optionalWidth.checked) {
-            optionalWidth.checked = false;
+        let $optionalWidthCheckbox = document.querySelector('.optional-width-checkbox');
+        if($optionalWidthCheckbox && $optionalWidthCheckbox.checked) {
+            $optionalWidthCheckbox.checked = false;
             APP.refreshMaxWorkingWidth();
+        }
+
+        let $widthType = document.querySelector('.width-type[data-width-type=full].is-selected');
+        if($widthType) {
+            document.querySelector('.width-type[data-width-type=row]').click();
         }
     }
     app.refreshCurrentParams = function($el) {
         let $parameter = $el.closest('.parameter');
+        let $slider = $parameter.querySelector('input[type=range]');
         let paramName = $parameter.getAttribute('data-id');
 
+        if(Number($el.value) > Number($slider.getAttribute('max'))) {
+            $el.value = $slider.getAttribute('max');
+        }
+        if(Number($el.value) < Number($slider.getAttribute('min'))) {
+            $el.value = $slider.getAttribute('min');
+        }
+
+        $slider.value = $el.value;
         app['currentWorking' + UTIL.capitalizeFirstLetter(paramName)] = UNIT.unconvert($el.value, paramName);
     }
     app.paramsCompute = function() {
@@ -1242,7 +1278,7 @@ var APP = (function(){
 
         app.changeContent('result');
     }
-    app.getMaxWidth = function(machineId, concimeId, isOptKit = false) {
+    app.getMaxWidth = function(machineId, concimeId, isOptKit = false, widthType = null) {
         let currentMachine = app.getMachine(machineId);
         let currentConcime = app.getConcime(concimeId);
 
@@ -1252,9 +1288,17 @@ var APP = (function(){
             maxWidth = Math.min(maxWidth, exceptionList[concimeId]);
         }
 
+        if(currentMachine.widthFullField) {
+            maxWidth = (widthType == 'full' ? currentMachine.widthFullField : currentMachine.widthMax);
+            console.log('full' + maxWidth);
+        }
+
         return maxWidth;
     }
     app.getOpening = function(machineId, concimeId) {
+        if(!concimeId || !machineId) {
+            return;
+        }
         const OPENING = 0;
         const KGMIN = 1;
         let currentMachine = app.getMachine(machineId);
@@ -1288,9 +1332,11 @@ var APP = (function(){
     app.initResult = function($html) {
         if(!app.currentMachine) {
             app.changeContent('set-machine');
+            return;
         }
         if(!app.currentConcime) {
             app.changeContent('set-concime');
+            return;
         }
         let currentMachine = app.getMachine(app.currentMachine);
         let currentConcime = app.getConcime(app.currentConcime);
@@ -1317,23 +1363,24 @@ var APP = (function(){
 
         html += getResultHtml(LANG.get('step-result'), currentMachine.name, true);
         html += getResultHtml(LANG.get('opening'), opening.opening, false, true);
-        html += getResultHtml('Mass flow', UNIT.convert(opening.kgMin, UNIT.MASS_FLOW, true));
+        html += getResultHtml(LANG.get('mass-flow'), UNIT.convert(opening.kgMin, UNIT.MASS_FLOW, true));
 
-        html += getResultHtml('Spreader', null, true);
-        html += getResultHtml('Spreader', currentMachine.name);
-        html += getResultHtml('Discs height', '');
-        html += getResultHtml('Pto speed', '');
+        html += getResultHtml(LANG.get('machine'), null, true);
+        html += getResultHtml(LANG.get('machine'), currentMachine.name);
+        let discsHeight = UNIT.convert(0.8, UNIT.WIDTH) + '-' + UNIT.convert(0.9, UNIT.WIDTH, true);
+        html += getResultHtml(LANG.get('result-discs-height'), discsHeight);
+        html += getResultHtml(LANG.get('result-pto-speed'), currentMachine.ptoSpeed + ' ' + LANG.get('unit-rpm'));
 
-        html += getResultHtml('Concime', null, true);
-        html += getResultHtml('Family', currentConcime.type);
-        html += getResultHtml('Product', currentConcime.name);
-        html += getResultHtml('Form', currentConcime.shape);
-        html += getResultHtml('Weight', currentConcime.weight);
+        html += getResultHtml(LANG.get('product'), null, true);
+        html += getResultHtml(LANG.get('product-family'), UTIL.capitalizeFirstLetter(currentConcime.type));
+        html += getResultHtml(LANG.get('product'), currentConcime.name);
+        html += getResultHtml(LANG.get('product-shape'), UTIL.capitalizeFirstLetter(currentConcime.shape));
+        html += getResultHtml(LANG.get('weight'), UNIT.convert(currentConcime.weight, UNIT.WEIGHT, true));
 
-        html += getResultHtml('Working parameters', currentMachine.name, true);
-        html += getResultHtml('Working width', UNIT.convert(app.currentWorkingWidth, UNIT.WIDTH, true));
-        html += getResultHtml('Speed', UNIT.convert(app.currentWorkingSpeed, UNIT.SPEED, true));
-        html += getResultHtml('Quantity', UNIT.convert(app.currentWorkingQuantity, UNIT.QUANTITY, true));
+        html += getResultHtml(LANG.get('step-params'), currentMachine.name, true);
+        html += getResultHtml(LANG.get('params-width'), UNIT.convert(app.currentWorkingWidth, UNIT.WIDTH, true));
+        html += getResultHtml(LANG.get('params-speed'), UNIT.convert(app.currentWorkingSpeed, UNIT.SPEED, true));
+        html += getResultHtml(LANG.get('params-quantity'), UNIT.convert(app.currentWorkingQuantity, UNIT.QUANTITY, true));
         $resultList.innerHTML = '<div class="property-list">' + html + '</div>';
 
         $main.innerHTML = app.getStepHtml('result');
@@ -1488,9 +1535,7 @@ var APP = (function(){
         let flowLiterHopper = Number(document.querySelector('#flowLiterHopper').value);
 
         let result = flowActual - 1 + ((flowQuantityStart - flowKgMonitor) / (flowQuantityStart - (flowLiterHopper * flowSpecificWeight)));
-        console.log(result);
         result = UTIL.round(result);
-
 
         if(!Number.isFinite(result)) {
             result = '-';

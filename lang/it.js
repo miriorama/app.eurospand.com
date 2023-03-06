@@ -29,6 +29,7 @@ var LANG_DATA = {
 "flow-factor-desc": "Esegui una concimazione di 0,5 ettari, o simile, e poi inserisci di seguito i dati richiesti.",
 
 "full-field": "Pieno campo",
+"row-distribution": "Localizzato",
 "in-progress": "in corso",
 "info": "Info",
 "information": "Informazioni",
@@ -63,21 +64,25 @@ var LANG_DATA = {
 "product-fractionation": "Frazionamento",
 "product-manufacturer": "Produttore",
 "products": "PRODOTTI",
+"product-shape": "Forma",
 "product-shape-granular": "Granulare",
 "product-shape-mineral": "Minerale",
 "product-shape-pelleted": "Pellettato",
 "product-shape-spherical": "Sferica",
-"product": "PRODOTTO",
+"product": "Prodotto",
 "reset": "RESET",
 "conversions": "Conversioni",
 "conversions-description": "Converti differenti unità di misura",
-"result-height-of-the-discs": "ALTEZZA DISCHI",
+"result-discs-height": "Altezza dischi",
 "opening": "Apertura",
 "opening-calculate": "Calcola apertura",
 
 "result-pto-speed": "VELOCITA' PTO",
 "result-width": "LARGHEZZA",
 "result-copied": "Risultato copiato nella clipboard",
+"result-pto-speed": "Pto Speed",
+
+"mass-flow": "Flusso di massa",
 
 "save": "Salva",
 "select": "SELEZIONA",
@@ -102,7 +107,7 @@ var LANG_DATA = {
 "unit-speed": "Velocità",
 
 "specific-weight": "Peso specifico",
-"weight": "PESO",
+"weight": "Peso",
 "welcome": "Benvenuto su",
 "working-parametres": "PARAMETRI DI LAVORO",
 

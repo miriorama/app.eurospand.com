@@ -2,6 +2,7 @@ var MACHINE_DATA = {
     "david-compact" : {
         name: "David",
         subtitle: "Compact",
+        ptoSpeed: 540,
         widthMin:1,
         widthMax:15,
         widthOpt: 18,
@@ -13,16 +14,16 @@ var MACHINE_DATA = {
           "azofertil-30": 12,
           "sulfammo-26": 12,
           "solfato-ammonico-20-5": 12,
-          "mesurol-pro": 6	,
+          "mesurol-pro": 6,
           "agrofertil-6n": 12,
           "oleabio-5-5-5": 12,
-          "avena": 6	,
-          "grano": 6	,
-          "galaxie-max-sas-energy": 6	,
-          "riviera-queen": 6	,
-          "orzo": 6	,
-          "segale": 6	,
-          "loglio-loietto": 6	,
+          "avena": 6,
+          "grano": 6,
+          "galaxie-max-sas-energy": 6,
+          "riviera-queen": 6,
+          "orzo": 6,
+          "segale": 6,
+          "loglio-loietto": 6,
         },
         widthOptException: {
           "urea-granulare-46": 15,
@@ -47,9 +48,11 @@ var MACHINE_DATA = {
     "david-compact-fruit" : {
         name: "David Fruit",
         subtitle: "Compact Fruit",
+        ptoSpeed: 540,
         widthMin:1,
-        widthMax:"5 (12m pieno campo)",
+        widthMax: 10,
         widthOpt: null,
+        widthFullField: 6,
         widthException: {
           "urea-granulare-46": 9,
           "urea-sferica-46": 9,
@@ -73,6 +76,7 @@ var MACHINE_DATA = {
     "apollo-galileo" : {
         name: "Galileo",
         subtitle: "Apollo",
+        ptoSpeed: 540,
         widthMin:9,
         widthMax:18,
         widthOpt: null,
@@ -99,6 +103,7 @@ var MACHINE_DATA = {
     "jolly-zeus-18" : {
         name: "Jolly 18",
         subtitle: "Zeus 18",
+        ptoSpeed: 540,
         widthMin:9,
         widthMax:18,
         widthOpt: 24,
@@ -144,9 +149,11 @@ var MACHINE_DATA = {
     "jolly-zeus-18-fruit" : {
         name: "Jolly 18 Fruit",
         subtitle: "Zeus 18 Fruit",
+        ptoSpeed: 540,
         widthMin:5,
-        widthMax:"10 (18 pieno campo)",
+        widthMax:20,
         widthOpt: null,
+        widthFullField: 9,
         widthException: {
           "urea-granulare-46": 15,
           "urea-sferica-46": 15,
@@ -170,6 +177,7 @@ var MACHINE_DATA = {
     "jolly-zeus-24" : {
         name: "Jolly 24",
         subtitle: "Zeus 24",
+        ptoSpeed: 540,
         widthMin:12,
         widthMax:24,
         widthOpt: null,
@@ -196,6 +204,7 @@ var MACHINE_DATA = {
     "jolly-zeus-28" : {
         name: "Jolly 28",
         subtitle: "Zeus 28",
+        ptoSpeed: 540,
         widthMin:15,
         widthMax:28,
         widthOpt: null,
@@ -222,6 +231,7 @@ var MACHINE_DATA = {
     "jolly-zeus-32" : {
         name: "Jolly 32",
         subtitle: "Zeus 32",
+        ptoSpeed: 1000,
         widthMin:18,
         widthMax:32,
         widthOpt: null,
@@ -248,6 +258,7 @@ var MACHINE_DATA = {
     "elettra-crono-24" : {
         name: "Elettra 24",
         subtitle: "Crono 24",
+        ptoSpeed: 540,
         widthMin:12,
         widthMax:24,
         widthOpt: null,
@@ -274,6 +285,7 @@ var MACHINE_DATA = {
     "elettra-crono-32" : {
         name: "Elettra 32",
         subtitle: "Crono 32",
+        ptoSpeed: 1000,
         widthMin:18,
         widthMax:32,
         widthOpt: null,
