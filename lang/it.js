@@ -1,4 +1,5 @@
 var LANG_DATA = {
+    "or": "oppure",
 "allow": "Permetti",
 "cancel": "Annulla",
 "chemical-composition": "Composizione chimica",
@@ -13,15 +14,19 @@ var LANG_DATA = {
 
 "calculate-params": "Calcola parametri",
 
+"flow-factor-actual": "Fattore di flusso attuale",
 "flow-factor-kg-monitor": "Kg sul monitor",
 "flow-factor-liters-hopper": "Litri in tramoggia",
 "flow-factor-quantity-end": "Quantità prodotto fine lavoro",
-"flow-factor-quantity-start": "Quantità prodotto inizio lavoro",
+"flow-factor-quantity-start": "Quantità prodotto inizio lavoro (indicata sul monitor)",
+"flow-factor-kg-monitor": "Kg sul monitor",
+"flow-factor-liter-hopper": "Litri in tramoggia",
 "flow-factor-specific-weight": "Peso specifico prodotto",
 "flow-factor": "Fattore di flusso",
 "flow-factor-liter-start": "Litri inizio",
 "flow-factor-liter-end": "Litri fine",
 "flow-factor-instructions": "Istruzioni",
+"flow-factor-desc": "Esegui una concimazione di 0,5 ettari, o simile, e poi inserisci di seguito i dati richiesti.",
 
 "full-field": "Pieno campo",
 "in-progress": "in corso",

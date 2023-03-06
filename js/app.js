@@ -1480,20 +1480,20 @@ var APP = (function(){
 
         return null;
     }
-    app.calculateParamsCompute = function() {
-        let flowSpecificWeight = document.querySelector('#flowSpecificWeight').value;
-        let flowQuantityStart = document.querySelector('#flowQuantityStart').value;
-        let flowQuantityEnd = document.querySelector('#flowQuantityEnd').value;
-        let flowLiterStart = document.querySelector('#flowLiterStart').value;
-        let flowLiterEnd = document.querySelector('#flowLiterEnd').value;
+    app.flowFactorCalculate = function() {
+        let flowActual = Number(document.querySelector('#flowActual').value);
+        let flowSpecificWeight = Number(document.querySelector('#flowSpecificWeight').value);
+        let flowQuantityStart = Number(document.querySelector('#flowQuantityStart').value);
+        let flowKgMonitor = Number(document.querySelector('#flowKgMonitor').value);
+        let flowLiterHopper = Number(document.querySelector('#flowLiterHopper').value);
 
-        let result = (flowQuantityStart - flowQuantityEnd) / (flowLiterStart - flowLiterEnd) * flowSpecificWeight;
-
-        result = Math.max(result, 0);
+        let result = flowActual - 1 + ((flowQuantityStart - flowKgMonitor) / (flowQuantityStart - (flowLiterHopper * flowSpecificWeight)));
+        console.log(result);
         result = UTIL.round(result);
 
-        if(isNaN(result)) {
-            result = 0;
+
+        if(!Number.isFinite(result)) {
+            result = '-';
         }
 
         let $result = document.querySelector('.result-number');
@@ -1501,31 +1501,6 @@ var APP = (function(){
     }
 
     // FLOW FACTOR
-    app.getFlowStepHtml = function(step) {
-        let html = '';
-        let cssClass = 'is-selected';
-        let stepParamsDisabled = (app.currentConcime && app.currentMachine ? false : true);
-
-        html = `<div class="step-list">
-            <button class="step ${('machine' === step ? cssClass : '')}" data-step="machine" onclick="APP.changeContent('set-machine');">
-                <div class="step-number">1</div>
-                <div class="step-title">${LANG.get('step-machine')}</div>
-                <div class="step-subtitle">Set your spreader</div>
-            </button>
-            <button class="step ${(stepParamsDisabled ? 'is-disabled' : '')} ${('params' === step ? cssClass : '')}" data-step="params" onclick="APP.changeContent('set-params');">
-                <div class="step-number">2</div>
-                <div class="step-title">${LANG.get('step-params')}</div>
-                <div class="step-subtitle">Set parameters</div>
-            </button>
-            <button class="step ${(stepParamsDisabled ? 'is-disabled' : '')} ${('result' === step ? cssClass : '')}" data-step="result" onclick="APP.changeContent('result');">
-                <div class="step-number">3</div>
-                <div class="step-title">RESULT</div>
-                <div class="step-subtitle"> </div>
-            </button>
-        </div>`;
-
-        return html;
-    }
     app.initFlowFactor = function($html) {
         $main.innerHTML = LANG.replace($html);
         $main.append($html);

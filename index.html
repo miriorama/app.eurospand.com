@@ -194,50 +194,56 @@
         <div class="parameter-list flow-factor">
             <div class="parameter-row">
                 <div class="parameter parameter-full">
+                    <div class="parameter-title">{flow-factor-actual}</div>
+                    <div class="parameter-input">
+                        <div class="parameter-text">
+                            <input type="text" value="1" id="flowActual">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="parameter-row">
+                <div class="parameter parameter-full">
                     <div class="parameter-title">{flow-factor-specific-weight}</div>
                     <div class="parameter-input">
                         <div class="parameter-text">
                             <input type="text" value="0" id="flowSpecificWeight">
-                            <div class="parameter-unit">KG/DM3</div>
+                            <div class="parameter-unit">Kg/dm³ {or} Kg/L</div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="parameter-row">
-                <div class="parameter">
+                <div class="parameter parameter-full">
                     <div class="parameter-title">{flow-factor-quantity-start}</div>
                     <div class="parameter-input">
                         <div class="parameter-text">
                             <input type="text" value="0" id="flowQuantityStart">
-                            <div class="parameter-unit">KG</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="parameter">
-                    <div class="parameter-title">{flow-factor-quantity-end}</div>
-                    <div class="parameter-input">
-                        <div class="parameter-text">
-                            <input type="text" value="0" id="flowQuantityEnd">
-                            <div class="parameter-unit">KG</div>
+                            <div class="parameter-unit">Kg</div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="parameter-row">
+                <div class="parameter parameter-full parameter-text">
+                    <div class="parameter-title">{flow-factor-desc}</div>
+                </div>
+            </div>
+            <div class="parameter-row">
                 <div class="parameter">
-                    <div class="parameter-title">{flow-factor-liter-start}</div>
+                    <div class="parameter-title">{flow-factor-kg-monitor}</div>
                     <div class="parameter-input">
                         <div class="parameter-text">
-                            <input type="text" value="0" id="flowLiterStart">
-                            <div class="parameter-unit">L</div>
+                            <input type="text" value="0" id="flowKgMonitor">
+                            <div class="parameter-unit">Kg</div>
                         </div>
                     </div>
                 </div>
                 <div class="parameter">
-                    <div class="parameter-title">{flow-factor-liter-end}</div>
+                    <div class="parameter-title">{flow-factor-liter-hopper}</div>
                     <div class="parameter-input">
                         <div class="parameter-text">
-                            <input type="text" value="0" id="flowLiterEnd">
+                            <input type="text" value="0" id="flowLiterHopper">
                             <div class="parameter-unit">L</div>
                         </div>
                     </div>
@@ -251,7 +257,7 @@
 
         <div class="footer-cta">
             <button class="btn" onclick="">{flow-factor-instructions}</button>
-            <button class="btn btn-important" onclick="APP.calculateParamsCompute();">{compute}</button>
+            <button class="btn btn-important" onclick="APP.flowFactorCalculate();">{compute}</button>
         </div>
     </template>
 
