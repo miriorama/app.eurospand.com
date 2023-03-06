@@ -461,7 +461,7 @@ var API = (function () {
 
 var APP = (function(){
     let app = {
-        debug: false,
+        debug: true,
         currentMachine: null,
         currentConcime: null,
         concimeTypeList: ['fertilizzanti', 'semi', 'lumachicida']
@@ -541,6 +541,14 @@ var APP = (function(){
             {   regex: '^concimi/?$',
                 template: 'concimi',
                 callback: app.initConcimi
+            },
+            {   regex: '^who/?$',
+                template: 'who',
+                callback: app.initWho
+            },
+            {   regex: '^contacts/?$',
+                template: 'contacts',
+                callback: app.initContacts
             },
         ];
 
@@ -1210,7 +1218,16 @@ var APP = (function(){
         app.refreshCheckLabel($parameterSlider);
     }
     app.paramsReset = function() {
+        let $rangeList = document.querySelectorAll('.parameter input[type=range]');
+        for (const $range of $rangeList) {
+            $range.value = $range.getAttribute('min');
+            app.refreshCheckLabel($range);
+        }
 
+        if(optionalWidth.checked) {
+            optionalWidth.checked = false;
+            APP.refreshMaxWorkingWidth();
+        }
     }
     app.refreshCurrentParams = function($el) {
         let $parameter = $el.closest('.parameter');
@@ -1302,12 +1319,12 @@ var APP = (function(){
         html += getResultHtml(LANG.get('opening'), opening.opening, false, true);
         html += getResultHtml('Mass flow', UNIT.convert(opening.kgMin, UNIT.MASS_FLOW, true));
 
-        html += getResultHtml('Spreader', currentMachine.name, true);
+        html += getResultHtml('Spreader', null, true);
         html += getResultHtml('Spreader', currentMachine.name);
         html += getResultHtml('Discs height', '');
         html += getResultHtml('Pto speed', '');
 
-        html += getResultHtml('Concime', currentMachine.name, true);
+        html += getResultHtml('Concime', null, true);
         html += getResultHtml('Family', currentConcime.type);
         html += getResultHtml('Product', currentConcime.name);
         html += getResultHtml('Form', currentConcime.shape);
@@ -1342,6 +1359,37 @@ var APP = (function(){
 
         localStorage.setItem(LOCAL_STORAGE_SAVED_WORKS, JSON.stringify(savedWorks));
         app.changeContent('saved-works');
+    }
+    app.shareResult = function() {
+        let data = '';
+
+        let currentMachine = app.getMachine(app.currentMachine);
+        let currentConcime = app.getConcime(app.currentConcime);
+        let opening = app.getOpening(app.currentMachine, app.currentConcime);
+
+        data += 'Mass flow:' + UNIT.convert(opening.kgMin, UNIT.MASS_FLOW, true);
+        data += 'Spreader:' + currentMachine.name;
+        data += 'Concime:' + currentConcime.name;
+        data += 'Working width:' + UNIT.convert(app.currentWorkingWidth, UNIT.WIDTH, true);
+        data += 'Speed:' + UNIT.convert(app.currentWorkingSpeed, UNIT.SPEED, true);
+        data += 'Quantity:' + UNIT.convert(app.currentWorkingQuantity, UNIT.QUANTITY, true);
+
+        if (navigator.share) {
+            navigator.share({
+                title: 'Eurospand',
+                text: 'prova',
+                //url: '',
+            });
+        } else {
+            navigator.clipboard.writeText(data).then(
+                () => {
+                  console.log(LANG.get('result-copied'))
+                },
+                () => {
+                  /* clipboard write failed */
+                }
+              );
+        }
     }
 
 
@@ -1386,9 +1434,13 @@ var APP = (function(){
                 </div>`;
         }
 
+        if(html == '') {
+            html = '<div class="no-result">Nessun risultato</div>';
+        }
+
         $div.innerHTML = html;
 
-        app.setTitle(LANG.get('saved-works'), '');
+        app.setTitle(LANG.get('menu-saved'));
 
         return $div;
     }
@@ -1589,6 +1641,21 @@ var APP = (function(){
         //$main.append($html);
 
         app.setTitle(LANG.get('products'));
+
+        return null;
+    }
+
+    app.initWho = function($html) {
+        $main.innerHTML = LANG.replace($html);
+
+        app.setTitle(LANG.get('menu-who'));
+
+        return null;
+    }
+    app.initContacts = function($html) {
+        $main.innerHTML = LANG.replace($html);
+
+        app.setTitle(LANG.get('menu-contact'));
 
         return null;
     }

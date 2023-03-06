@@ -39,8 +39,8 @@
         <button class="menu-saved" onclick="APP.menuClose();APP.changeContent('saved-works');"></button>
         <button class="menu-lang" onclick="APP.menuClose();APP.changeContent('set-language');"></button>
         <button class="menu-unit" onclick="APP.menuClose();APP.changeContent('set-unit');"></button>
-        <button class="menu-who"></button>
-        <button class="menu-contact"></button>
+        <button class="menu-who" onclick="APP.menuClose();APP.changeContent('who');"></button>
+        <button class="menu-contact" onclick="APP.menuClose();APP.changeContent('contacts');"></button>
 
         <div class="menu-footer">
             © 2023 - P.IVA 00164000044
@@ -375,6 +375,22 @@
     <template data-section="set-language"></template>
     <template data-section="set-unit"></template>
     <template data-section="concimi"></template>
+
+    <template data-section="who">
+        <div class="text-container">{who-text}</div>
+    </template>
+    <template data-section="contacts">
+        <div class="text-container who">
+            <b>AUTOTRASPORTI CAVALLO GIORDANO & VALLAURI spa</b>
+            <br><i>{agricultural-branch}</i>
+            <br><br>Via Cuneo 161 - 12012 Boves (CN)
+            <br><b>Tel.</b>: <a href="tel:+390171391511">+390171391511</a>
+            <br><b>Fax</b>: <a href="tel:+390171391511">+390171391507</a>
+            <br><b>Email</b>:<a href="mailto:omb@gruppocavallo.it">omb@gruppocavallo.it</a>
+            <br><b>P.IVA</b>:00164000044
+            <br><br><a href="www.eurospand.com" target="_blank" rel="noopener noreferrer">www.eurospand.com</a>
+        </div>
+    </template>
 
     <script type="text/javascript" src="js/app.min.js"></script>
     <script type="text/javascript" src="js/data.min.js"></script>

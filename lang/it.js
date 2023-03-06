@@ -72,6 +72,8 @@ var LANG_DATA = {
 
 "result-pto-speed": "VELOCITA' PTO",
 "result-width": "LARGHEZZA",
+"result-copied": "Risultato copiato nella clipboard",
+
 "save": "Salva",
 "select": "SELEZIONA",
 "share": "Condividi",
@@ -168,5 +170,8 @@ var LANG_DATA = {
     subtitle: "Professional Electronic centrifugal double disc fertilizer spreader ",
     shortDescription: "Ideal for the distribution of mineral, powdered fertilizers and organic amenders and for the broadcast of various seeds.",
     description: "Hopper capacity: 1400 - 2000 - 3000 litres<br>Working width: up to 32 metres *<br>Electronic system for distribution handling proportional to the forward speed with quantities adjustment by means of linear actuators. <br>Independent L/R hydraulic opening/closing control with double effect cylinders to open and close the dose shutters instantaneously in the case of failure of the electronic system<br>- Frame with payload up to 3600 kg  <br>- Integrated GPS speed detector  <br>- Versions with weighing system (+W) <br>Vibro system: vibrating hopper bottom, without inner agitators<br>TPS – Transmission Protection System <br>II and III category hook with two hitching positions<br>* with granular-mineral fertilizers with density equal to or greater than 1kg/dm3",
-}
+},
+
+"who-text": "<b>Eurospand</b> e <b>Cavallo</b> sono marchi di proprietà della “Divisione Macchine Agricole” della Società Autotrasporti Cavallo Giordano e Vallauri spa che dal 1970 produce e commercializza macchine spandiconcime professionali aventi nella robustezza strutturale, precisione di distribuzione, resistenza alla corrosione ed una continua e costante innovazione tecnica, la base del proprio pensiero.<br>Lo stabilimento di produzione occupa un’area di 8500 metri coperti ed è alimentato da un impianto fotovoltaico che genera una potenza massima di 730 kWp ed ha una capacità produttiva annua di circa 900.000 KW/Anno.<br>Al proprio interno (sotto il controllo di un sistema di qualità certificata UNI EN ISO 9001) si svolge il 100% della progettazione meccanica ed elettronica e si producono il 90% di tutti le parti e semilavorati necessari alla realizzazione di spandiconcime portati e trainati – spandiconcime pendolari – spargisale – carrelli porta spandiconcime e selezionatrici di castagne.<br>I brand sono presenti e commercializzati ad oggi in più di 40 Paesi nel Mondo, oltre che in Italia con una rete di vendita di circa 80 rivenditori riconosciuti.",
+"agricultural-branch": "Divisione macchine agricole"
 }

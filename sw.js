@@ -1,8 +1,7 @@
 var GHPATH = '';
 var APP_PREFIX = 'eurospand-';
-var VERSION = 'v=0.10';
+var VERSION = 'v=0.16';
 var URLS = [
-    `${GHPATH}/`,
     `${GHPATH}/index.html`,
     `${GHPATH}/css/style.css`,
     `${GHPATH}/js/app.min.js`,
@@ -62,7 +61,6 @@ var URLS = [
     `${GHPATH}/img/machine/david-compact.jpg`,
     `${GHPATH}/img/machine/elettra-crono-24.jpg`,
     `${GHPATH}/img/machine/elettra-crono-32.jpg`,
-    `${GHPATH}/img/machine/elletra-crono-24.jpg`,
     `${GHPATH}/img/machine/jolly-zeus-18-fruit.jpg`,
     `${GHPATH}/img/machine/jolly-zeus-18.jpg`,
     `${GHPATH}/img/machine/jolly-zeus-24.jpg`,
@@ -76,16 +74,18 @@ self.addEventListener('fetch', function (event) {
     caches.match(event.request).then(function (request) {
       if (request) {
         //console.log('Responding with cache : ' + event.request.url);
-        return request
+        return request;
       } else {
         //console.log('File is not cached, fetching : ' + event.request.url);
-        return fetch(event.request)
+        return fetch(event.request);
       }
     })
   )
 })
 
 self.addEventListener('install', function (event) {
+  self.skipWaiting();
+
   event.waitUntil(
     caches.open(CACHE_NAME).then(function (cache) {
       console.log('Installing cache : ' + CACHE_NAME);
